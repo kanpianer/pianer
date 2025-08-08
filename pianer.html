@@ -1,0 +1,126 @@
+ 
+<!DOCTYPE html><html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>影视导航</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #333;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    .toggle-buttons {
+      margin-top: 1rem;
+    }
+    .toggle-buttons button {
+      background-color: #555;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin: 0 0.5rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+    .toggle-buttons button:hover {
+      background-color: #777;
+      transform: scale(1.05);
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+      padding: 2rem;
+    }
+    .card {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .card a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .card:hover {
+      background: #f0f0f0;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #333;
+      color: white;
+    }
+    .section {
+      display: none;
+    }
+    .section.active {
+      display: grid;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>影视导航网站</h1>
+    <div class="toggle-buttons">
+      <button onclick="showSection('online')">在线观看</button>
+      <button onclick="showSection('download')">网盘下载</button>
+    </div>
+  </header>  <main>
+    <section id="online" class="container section active">
+      <div class="card">
+        <a href="https://www.iqiyi.com/" target="_blank">爱奇艺</a>
+        <small><a href="#" target="_blank">备份网站</a></small>
+      </div>
+      <div class="card">
+        <a href="https://v.qq.com/" target="_blank">腾讯视频</a>
+        <small><a href="#" target="_blank">备份网站</a></small>
+      </div>
+      <div class="card">
+        <a href="https://www.youku.com/" target="_blank">优酷</a>
+        <small><a href="#" target="_blank">备份网站</a></small>
+      </div>
+      <div class="card">
+        <a href="https://www.bilibili.com/" target="_blank">哔哩哔哩</a>
+        <small><a href="#" target="_blank">备份网站</a></small>
+      </div>
+    </section><section id="download" class="container section">
+  <div class="card">
+    <a href="https://pan.baidu.com/" target="_blank">百度网盘</a>
+    <small><a href="#" target="_blank">备份网站</a></small>
+  </div>
+  <div class="card">
+    <a href="https://www.aliyundrive.com/" target="_blank">阿里云盘</a>
+    <small><a href="#" target="_blank">备份网站</a></small>
+  </div>
+  <div class="card">
+    <a href="https://123pan.com/" target="_blank">123云盘</a>
+    <small><a href="#" target="_blank">备份网站</a></small>
+  </div>
+  <div class="card">
+    <a href="https://quark.cn/" target="_blank">夸克网盘</a>
+    <small><a href="#" target="_blank">备份网站</a></small>
+  </div>
+</section>
+
+  </main>  <footer>
+    <p>© 2025 影视导航</p>
+  </footer>  <script>
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+  </script></body>
+</html>
