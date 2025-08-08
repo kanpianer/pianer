@@ -89,28 +89,249 @@
       </div>
       <div class="card">
         <a href="https://www.youku.com/" target="_blank">优酷</a>
-        <small><a href="#" target="_blank">备份网站</a></small>
-      </div>
-      <div class="card">
-        <a href="https://www.bilibili.com/" target="_blank">哔哩哔哩</a>
-        <small><a href="#" target="_blank">备份网站</a></small>
-      </div>
-    </section><section id="download" class="container section">
-  <div class="card">
-    <a href="https://pan.baidu.com/" target="_blank">百度网盘</a>
-    <small><a href="#" target="_blank">备份网站</a></small>
-  </div>
-  <div class="card">
-    <a href="https://www.aliyundrive.com/" target="_blank">阿里云盘</a>
-    <small><a href="#" target="_blank">备份网站</a></small>
-  </div>
-  <div class="card">
-    <a href="https://123pan.com/" target="_blank">123云盘</a>
-    <small><a href="#" target="_blank">备份网站</a></small>
-  </div>
-  <div class="card">
-    <a href="https://quark.cn/" target="_blank">夸克网盘</a>
-    <small><a href="#" target="_blank">备份网站</a></small>
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>看片儿导航</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+            color: #ffffff;
+        }
+
+        /* Header */
+        header {
+            padding: 20px 0;
+            background-color: #1c1c1c;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+        }
+
+        /* Banner */
+        .banner {
+            text-align: center;
+            padding: 30px 0;
+            background-color: #2c2c2c;
+        }
+
+        .banner h2 {
+            font-size: 2em;
+            color: #ffcc00;
+        }
+
+        .banner p {
+            font-size: 1.2em;
+        }
+
+        .btn-backup {
+            background-color: #ffcc00;
+            border: none;
+            padding: 10px 20px;
+            color: #121212;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        .btn-backup:hover {
+            background-color: #ffb400;
+        }
+
+        /* Category buttons */
+        .btn-category {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #3c3c3c;
+            color: #ffffff;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-category:hover {
+            background-color: #ffcc00;
+            border-color: #ffcc00;
+        }
+
+        .btn-category.active {
+            background-color: #ffcc00;
+            border-color: #ffcc00;
+        }
+
+        /* Site grid */
+        .site-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .site-card {
+            background-color: #2c2c2c;
+            padding: 20px;
+            border-radius: 10px;
+            width: 200px;
+            text-align: center;
+        }
+
+        .site-card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .site-card button {
+            background: none;
+            border: 2px solid #ffcc00;
+            color: #ffcc00;
+            padding: 5px 15px;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .site-card button:hover {
+            background-color: #ffcc00;
+            color: #121212;
+        }
+
+        .site-card:hover button {
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #1c1c1c;
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>看片儿导航</h1>
+    </header>
+
+    <!-- Banner -->
+    <div class="banner">
+        <h2>甄选国内外优秀影视资源站</h2>
+        <p>
+            <button class="btn-backup" onclick="window.location.href='https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4';">网站备份</button>
+        </p>
+    </div>
+
+    <!-- Category Buttons -->
+    <div style="text-align: center;">
+        <button class="btn-category" id="onlineBtn">在线</button>
+        <button class="btn-category" id="cloudBtn">网盘</button>
+        <button class="btn-category" id="btBtn">BT</button>
+    </div>
+
+    <!-- Site Grid -->
+    <div id="siteGrid" class="site-grid">
+        <!-- Dynamic content will be loaded here based on category selection -->
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>用心制作了 | Made with ❤️</p>
+    </footer>
+
+    <script>
+        // Website data
+        const websites = [
+            { name: "厂长资源", url: "https://cz233.com/", backup: "https://www.czzy.site/", tags: ["在线"] },
+            { name: "低端影视", url: "https://ddys.pro/", backup: "https://ddys.site/", tags: ["在线", "网盘"] },
+            { name: "NO视频", url: "https://www.novipnoad.cc/", backup: "https://findno.tv/", tags: ["在线"] },
+            { name: "HDmoli", url: "https://www.hdmoli.pro/", backup: "https://molicp.com/", tags: ["在线", "网盘"] },
+            { name: "BT之家", url: "https://1lou.one/", backup: "https://1lou.cc/", tags: ["BT", "网盘"] },
+            { name: "观影", url: "https://gyg.la/", backup: "https://gyg.si/", tags: ["在线", "网盘", "BT"] },
+        ];
+
+        const categories = ["在线", "网盘", "BT"];
+
+        function loadSites(category) {
+            const filteredSites = websites.filter(site => site.tags.includes(category));
+            const gridContainer = document.getElementById("siteGrid");
+            gridContainer.innerHTML = "";  // Clear current grid
+
+            filteredSites.forEach(site => {
+                const siteCard = document.createElement("div");
+                siteCard.classList.add("site-card");
+
+                const siteLogo = document.createElement("img");
+                siteLogo.src = `https://www.google.com/s2/favicons?domain=${new URL(site.url).hostname}`;
+                siteCard.appendChild(siteLogo);
+
+                const siteName = document.createElement("h3");
+                siteName.textContent = site.name;
+                siteCard.appendChild(siteName);
+
+                const backupButton = document.createElement("button");
+                backupButton.textContent = "备份网址";
+                backupButton.onclick = () => window.location.href = site.backup;
+                siteCard.appendChild(backupButton);
+
+                gridContainer.appendChild(siteCard);
+            });
+        }
+
+        // Initial Load for "在线" category
+        loadSites("在线");
+
+        // Button Click Handlers
+        document.getElementById("onlineBtn").onclick = () => {
+            setActiveCategory("在线");
+            loadSites("在线");
+        };
+        document.getElementById("cloudBtn").onclick = () => {
+            setActiveCategory("网盘");
+            loadSites("网盘");
+        };
+        document.getElementById("btBtn").onclick = () => {
+            setActiveCategory("BT");
+            loadSites("BT");
+        };
+
+        // Highlight active category
+        function setActiveCategory(activeCategory) {
+            categories.forEach(category => {
+                const button = document.getElementById(category.toLowerCase() + "Btn");
+                if (category === activeCategory) {
+                    button.classList.add("active");
+                } else {
+                    button.classList.remove("active");
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html><small><a href="#" target="_blank">备份网站</a></small>
   </div>
 </section>
 
