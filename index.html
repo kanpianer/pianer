@@ -5,6 +5,16 @@
     <title>看片儿导航</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        /* Define the custom fonts */
+        @font-face {
+            font-family: 'BoldFont';
+            src: url('https://github.com/kanpianer/pianer/blob/main/fonts/Bold.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'LightFont';
+            src: url('https://github.com/kanpianer/pianer/blob/main/fonts/Light.ttf') format('truetype');
+        }
+
         :root {
             --primary: #fff;
             --background: #181a20;
@@ -19,7 +29,7 @@
             padding: 0;
             background: var(--background);
             color: var(--primary);
-            font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            font-family: 'LightFont', sans-serif;  /* Apply Light font globally */
             min-height: 100vh;
             box-sizing: border-box;
         }
@@ -35,20 +45,22 @@
             font-weight: 700;
             letter-spacing: 4px;
             margin-top: 44px;
-            margin-bottom: 30px;
+            margin-bottom: 16px;  /* Reduced margin for smaller spacing */
+            font-family: 'BoldFont', sans-serif;  /* Apply Bold font to header */
         }
         .banner {
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 32px;
+            margin-bottom: 16px;  /* Reduced margin for smaller spacing */
         }
         .banner h2 {
             font-size: 1.3rem;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 8px;  /* Reduced margin for smaller spacing */
             color: var(--accent);
+            font-family: 'BoldFont', sans-serif;  /* Apply Bold font to banner title */
         }
         .banner .banner-action {
             display: flex;
@@ -64,8 +76,9 @@
             border-radius: 28px;
             outline: none;
             cursor: pointer;
-            margin-bottom: 30px;  /* Increased bottom margin to add space */
+            margin-bottom: 16px;  /* Reduced margin for smaller spacing */
             transition: background 0.18s, color 0.18s;
+            font-family: 'BoldFont', sans-serif;  /* Apply Bold font to backup button */
         }
         .banner .backup-btn:hover {
             background: var(--accent);
@@ -73,8 +86,8 @@
         }
         .category-btns {
             display: flex;
-            gap: 22px;
-            margin-bottom: 28px;
+            gap: 14px;  /* Reduced gap between buttons */
+            margin-bottom: 16px;  /* Reduced margin for smaller spacing */
             justify-content: center;
         }
         .category-btn {
@@ -89,6 +102,7 @@
             font-weight: 600;
             transition: background 0.18s, color 0.18s, transform 0.14s;
             outline: 2px solid transparent;
+            font-family: 'BoldFont', sans-serif;  /* Apply Bold font to category buttons */
         }
         .category-btn:hover {
             background: var(--button-hover);
