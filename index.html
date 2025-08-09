@@ -9,7 +9,7 @@
             --primary: #fff;
             --background: #181a20;
             --accent: #ff5630;
-            --muted: #3b3b4e;
+            --muted: #343646;
             --button-hover: #353949;
             --outline: #ff56309c;
             --fixed: #ff5630;
@@ -19,7 +19,7 @@
             padding: 0;
             background: var(--background);
             color: var(--primary);
-            font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
             min-height: 100vh;
             box-sizing: border-box;
         }
@@ -106,7 +106,7 @@
             flex-wrap: wrap;
             gap: 30px 20px;
             justify-content: center;
-            margin-bottom: 50px;
+            margin-bottom: 8px;
             min-height: 150px;
         }
         .site-card {
@@ -126,8 +126,19 @@
             font-weight: 600;
             margin-bottom: 13px;
             text-align: center;
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.08rem;
+            transition: color .17s;
         }
-        .backup-link-btn {
+        .site-name:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+        .backup-link-btn, .backup-none-btn {
             padding: 7px 16px;
             font-size: 0.97rem;
             border: 2px solid var(--outline);
@@ -138,17 +149,30 @@
             cursor: pointer;
             transition: background 0.2s, color 0.15s, border-color 0.17s;
         }
-        .backup-link-btn:hover {
+        .backup-link-btn:hover, .backup-none-btn:hover {
             background: var(--accent);
             color: var(--background);
             border-color: var(--fixed);
             transform: translateY(-2px) scale(1.04);
+        }
+        .backup-none-btn {
+            color: #b6b2b2;
+            border-color: var(--outline);
         }
         @media screen and (max-width: 600px) {
             header { font-size: 1.3rem; letter-spacing: 2px;}
             .site-card { min-width: 130px; padding: 11px 9px; font-size: 1rem;}
             .banner h2 { font-size: 1rem;}
             .category-btn { font-size: 0.87rem; padding: 8px 12px;}
+        }
+        .notes {
+            width: 100%;
+            text-align: center;
+            font-size: .98rem;
+            color: #bcb8c0;
+            margin-bottom: 36px;
+            margin-top: 12px;
+            line-height: 1.7;
         }
         footer {
             margin-top: auto;
@@ -189,12 +213,14 @@
     <div class="site-grid" id="siteGrid">
         <!-- 网格区域将由JS动态填充 -->
     </div>
+    <div class="notes">
+        注：EE3邀请码：FMHY，Goplay禁止中国大陆IP访问，访问不畅请自行搭梯子
+    </div>
     <footer>
         用心制作 | Made with ❤️
     </footer>
 <script>
-
-    // 最新网站列表（处理后的结构，注意标签归类）
+    // 网站列表（由括号内容转为结构体）
     const SITES = [
         {
             name: "厂长资源",
@@ -334,7 +360,6 @@
 
     function switchCategory(category) {
         currentCategory = category;
-        // 激活按钮切换
         ['online','pan','bt'].forEach((c,i) => {
             document.getElementById(`btn-${c}`).classList.toggle('active', c === category);
         });
@@ -344,56 +369,41 @@
     function renderGrid() {
         const grid = document.getElementById("siteGrid");
         grid.innerHTML = '';
-
-        // 分类转换
         let matchTag;
         if(currentCategory === "online") matchTag="在线";
         if(currentCategory === "pan") matchTag="网盘";
         if(currentCategory === "bt") matchTag="BT";
-
-        // 提取需要显示的数据
         let filtered = SITES.filter(site=>site.tags.includes(matchTag));
         filtered.forEach(site=>{
-            // 卡片HTML
             let card = document.createElement("div");
             card.className = 'site-card';
 
-            // 网站名（按钮）
             let btn = document.createElement('button');
             btn.className = 'site-name';
             btn.textContent = site.name;
             btn.onclick = function(){
                 window.open(site.main_url,"_blank");
             }
-            btn.style.background = 'none';
-            btn.style.border = 'none';
-            btn.style.color = 'inherit';
-            btn.style.cursor = 'pointer';
-            btn.style.fontWeight = '600';
-            btn.style.fontSize = '1.08rem';
-            btn.onmouseover = function(){
-                btn.style.color = "var(--accent)";
-                btn.style.textDecoration = "underline";
-            }
-            btn.onmouseout = function(){
-                btn.style.color = "inherit";
-                btn.style.textDecoration = "none";
-            }
             card.appendChild(btn);
 
-            // 备份网址按钮（有备份网址才显示）
+            // 备份按钮
             if(site.backup_url && site.backup_url.trim().length > 0){
                 let backupBtn = document.createElement('button');
                 backupBtn.className = "backup-link-btn";
                 backupBtn.textContent = "备份网址";
                 backupBtn.onclick = ()=>{ window.open(site.backup_url,"_blank"); }
                 card.appendChild(backupBtn);
+            } else {
+                let backupNoneBtn = document.createElement('button');
+                backupNoneBtn.className = "backup-none-btn";
+                backupNoneBtn.textContent = "没有备份";
+                backupNoneBtn.onclick = ()=>{ window.open("https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4","_blank"); }
+                card.appendChild(backupNoneBtn);
             }
             grid.appendChild(card);
         });
     }
 
-    // 初始渲染
     renderGrid();
 
 </script>
