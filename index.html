@@ -35,19 +35,19 @@
             font-weight: 700;
             letter-spacing: 4px;
             margin-top: 44px;
-            margin-bottom: 16px;  /* Reduced margin for smaller spacing */
+            margin-bottom: 16px;
         }
         .banner {
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 16px;  /* Reduced margin for smaller spacing */
+            margin-bottom: 16px;
         }
         .banner h2 {
             font-size: 1.3rem;
             font-weight: 600;
-            margin-bottom: 8px;  /* Reduced margin for smaller spacing */
+            margin-bottom: 8px;
             color: var(--accent);
         }
         .banner .banner-action {
@@ -56,15 +56,16 @@
             align-items: center;
         }
         .banner .backup-btn {
-            padding: 5.4px 19.2px;  /* Shrunk padding by 20% */
-            font-size: 0.6rem;  /* Reduced font size by 20% */
+            /* 增大30%：padding 与字号 */
+            padding: 7.02px 24.96px;
+            font-size: 0.78rem;
             color: var(--accent);
             border: 2px solid var(--accent);
             background: transparent;
             border-radius: 28px;
             outline: none;
             cursor: pointer;
-            margin-bottom: 16px;  /* Reduced margin for smaller spacing */
+            margin-bottom: 16px;
             transition: background 0.18s, color 0.18s;
         }
         .banner .backup-btn:hover {
@@ -73,8 +74,8 @@
         }
         .category-btns {
             display: flex;
-            gap: 14px;  /* Reduced gap between buttons */
-            margin-bottom: 16px;  /* Reduced margin for smaller spacing */
+            gap: 14px;
+            margin-bottom: 16px;
             justify-content: center;
         }
         .category-btn {
@@ -124,11 +125,10 @@
             transition: transform 0.3s ease, box-shadow 0.2s ease;
         }
         .site-card:hover {
-            transform: scale(1.05);  /* Slightly enlarges the card */
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);  /* Adds a larger shadow effect */
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
         }
         .site-name {
-            font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 13px;
             text-align: center;
@@ -136,9 +136,9 @@
             border: none;
             color: inherit;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 1.08rem;
             transition: color .17s;
+            /* 增大20%（原1.08rem -> 1.296rem） */
+            font-size: 1.296rem;
         }
         .site-name:hover {
             color: var(--accent);
@@ -190,7 +190,7 @@
             letter-spacing: 1px;
         }
         footer a {
-            color: var(--accent);  /* Ensuring the link color is consistent */
+            color: var(--accent);
             text-decoration: none;
             margin-left: 10px;
         }
