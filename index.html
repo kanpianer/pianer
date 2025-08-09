@@ -5,16 +5,6 @@
     <title>看片儿导航</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* Define the custom fonts */
-        @font-face {
-            font-family: 'BoldFont';
-            src: url('https://github.com/kanpianer/pianer/blob/main/fonts/Bold.ttf') format('truetype');
-        }
-        @font-face {
-            font-family: 'LightFont';
-            src: url('https://github.com/kanpianer/pianer/blob/main/fonts/Light.ttf') format('truetype');
-        }
-
         :root {
             --primary: #fff;
             --background: #181a20;
@@ -29,7 +19,7 @@
             padding: 0;
             background: var(--background);
             color: var(--primary);
-            font-family: 'LightFont', sans-serif;  /* Apply Light font globally */
+            font-family: sans-serif;
             min-height: 100vh;
             box-sizing: border-box;
         }
@@ -46,7 +36,6 @@
             letter-spacing: 4px;
             margin-top: 44px;
             margin-bottom: 16px;  /* Reduced margin for smaller spacing */
-            font-family: 'BoldFont', sans-serif;  /* Apply Bold font to header */
         }
         .banner {
             width: 100%;
@@ -60,7 +49,6 @@
             font-weight: 600;
             margin-bottom: 8px;  /* Reduced margin for smaller spacing */
             color: var(--accent);
-            font-family: 'BoldFont', sans-serif;  /* Apply Bold font to banner title */
         }
         .banner .banner-action {
             display: flex;
@@ -68,8 +56,8 @@
             align-items: center;
         }
         .banner .backup-btn {
-            padding: 6.75px 24px;  /* Shrunk by 25% */
-            font-size: 0.75rem;  /* Adjusted font size */
+            padding: 5.4px 19.2px;  /* Shrunk padding by 20% */
+            font-size: 0.6rem;  /* Reduced font size by 20% */
             color: var(--accent);
             border: 2px solid var(--accent);
             background: transparent;
@@ -78,7 +66,6 @@
             cursor: pointer;
             margin-bottom: 16px;  /* Reduced margin for smaller spacing */
             transition: background 0.18s, color 0.18s;
-            font-family: 'BoldFont', sans-serif;  /* Apply Bold font to backup button */
         }
         .banner .backup-btn:hover {
             background: var(--accent);
@@ -102,7 +89,6 @@
             font-weight: 600;
             transition: background 0.18s, color 0.18s, transform 0.14s;
             outline: 2px solid transparent;
-            font-family: 'BoldFont', sans-serif;  /* Apply Bold font to category buttons */
         }
         .category-btn:hover {
             background: var(--button-hover);
