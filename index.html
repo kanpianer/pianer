@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>看片儿导航</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 网站图标：🎬 -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎬%3C/text%3E%3C/svg%3E">
     <style>
         :root {
             --primary: #fff;
@@ -45,6 +47,7 @@
             margin-inline: auto;
             padding-left: var(--page-padding-x);
             padding-right: var(--page-padding-x);
+            align-items: center;  /* Centers all content inside */
         }
 
         header {
@@ -128,8 +131,8 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 30px 20px;
-            justify-items: stretch;
-            align-items: stretch;
+            justify-items: center; /* Ensures site cards are centered horizontally */
+            align-items: center; /* Ensures site cards are centered vertically */
             margin-bottom: 8px;
             min-height: 150px;
         }
@@ -138,9 +141,8 @@
             background: var(--muted);
             border-radius: 17px;
             box-shadow: 0 2px 8px rgba(20,24,32, 0.09);
-            padding: 22px 28px;
-            /* 让卡片在grid内完全占满可用宽度 */
-            width: 100%;
+            padding: 18.7px 23.8px;  /* 15% smaller padding */
+            width: 85%;  /* 15% smaller width */
             min-height: 80px;
             display: flex;
             flex-direction: column;
