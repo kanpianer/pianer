@@ -56,15 +56,15 @@
             align-items: center;
         }
         .banner .backup-btn {
-            padding: 9px 32px;
-            font-size: 1rem;
+            padding: 6.75px 24px;  /* Shrunk by 25% */
+            font-size: 0.75rem;  /* Adjusted font size */
             color: var(--accent);
             border: 2px solid var(--accent);
             background: transparent;
             border-radius: 28px;
             outline: none;
             cursor: pointer;
-            margin-bottom: 18px;
+            margin-bottom: 30px;  /* Increased bottom margin to add space */
             transition: background 0.18s, color 0.18s;
         }
         .banner .backup-btn:hover {
@@ -120,6 +120,12 @@
             flex-direction: column;
             align-items: center;
             position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.2s ease;
+        }
+        .site-card:hover {
+            transform: scale(1.05);  /* Slightly enlarges the card */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);  /* Adds a larger shadow effect */
         }
         .site-name {
             font-size: 1.1rem;
@@ -183,6 +189,11 @@
             padding: 24px 0 13px 0;
             letter-spacing: 1px;
         }
+        footer a {
+            color: var(--accent);  /* Ensuring the link color is consistent */
+            text-decoration: none;
+            margin-left: 10px;
+        }
         ::-webkit-scrollbar {
           width: 8px;
           background: var(--muted);
@@ -218,6 +229,7 @@
     </div>
     <footer>
         用心制作 | Made with ❤️
+        <a href="https://github.com/kanpianer/pianer" target="_blank">Github</a>
     </footer>
 <script>
     // 网站列表（由括号内容转为结构体）
@@ -378,10 +390,16 @@
             let card = document.createElement("div");
             card.className = 'site-card';
 
+            // Add click behavior to the entire card
+            card.onclick = function() {
+                window.open(site.main_url, "_blank");
+            };
+
             let btn = document.createElement('button');
             btn.className = 'site-name';
             btn.textContent = site.name;
-            btn.onclick = function(){
+            btn.onclick = function(event){
+                event.stopPropagation();  // Prevent triggering the card's click event
                 window.open(site.main_url,"_blank");
             }
             card.appendChild(btn);
@@ -391,13 +409,19 @@
                 let backupBtn = document.createElement('button');
                 backupBtn.className = "backup-link-btn";
                 backupBtn.textContent = "备份网址";
-                backupBtn.onclick = ()=>{ window.open(site.backup_url,"_blank"); }
+                backupBtn.onclick = (event) => {
+                    event.stopPropagation();  // Prevent triggering the card's click event
+                    window.open(site.backup_url,"_blank");
+                }
                 card.appendChild(backupBtn);
             } else {
                 let backupNoneBtn = document.createElement('button');
                 backupNoneBtn.className = "backup-none-btn";
                 backupNoneBtn.textContent = "没有备份";
-                backupNoneBtn.onclick = ()=>{ window.open("https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4","_blank"); }
+                backupNoneBtn.onclick = (event) => {
+                    event.stopPropagation();  // Prevent triggering the card's click event
+                    window.open("https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4","_blank");
+                }
                 card.appendChild(backupNoneBtn);
             }
             grid.appendChild(card);
@@ -405,7 +429,6 @@
     }
 
     renderGrid();
-
 </script>
 </body>
 </html>
