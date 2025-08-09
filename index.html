@@ -13,6 +13,10 @@
             --button-hover: #353949;
             --outline: #ff56309c;
             --fixed: #ff5630;
+
+            /* 页面左右留白 */
+            --page-max-width: 1200px;
+            --page-padding-x: clamp(16px, 4vw, 40px);
         }
         html, body {
             margin: 0;
@@ -23,11 +27,26 @@
             min-height: 100vh;
             box-sizing: border-box;
         }
+        *, *::before, *::after { box-sizing: inherit; }
+
         body {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
+
+        /* 容器：控制两侧留白与最大宽度 */
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: var(--page-max-width);
+            margin-inline: auto;
+            padding-left: var(--page-padding-x);
+            padding-right: var(--page-padding-x);
+        }
+
         header {
             width: 100%;
             text-align: center;
@@ -56,7 +75,7 @@
             align-items: center;
         }
         .banner .backup-btn {
-            /* 增大30%：padding 与字号 */
+            /* 增大30%：padding 与字号（相对你的上个版本） */
             padding: 7.02px 24.96px;
             font-size: 0.78rem;
             color: var(--accent);
@@ -77,6 +96,7 @@
             gap: 14px;
             margin-bottom: 16px;
             justify-content: center;
+            width: 100%;
         }
         .category-btn {
             min-width: 86px;
@@ -101,21 +121,26 @@
             color: var(--background);
             outline: 2px solid var(--fixed);
         }
+
+        /* 站点网格：使用 CSS Grid 自适应列 */
         .site-grid {
             width: 100%;
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 30px 20px;
-            justify-content: center;
+            justify-items: stretch;
+            align-items: stretch;
             margin-bottom: 8px;
             min-height: 150px;
         }
+
         .site-card {
             background: var(--muted);
             border-radius: 17px;
             box-shadow: 0 2px 8px rgba(20,24,32, 0.09);
-            padding: 22px 28px 22px 28px;
-            min-width: 170px;
+            padding: 22px 28px;
+            /* 让卡片在grid内完全占满可用宽度 */
+            width: 100%;
             min-height: 80px;
             display: flex;
             flex-direction: column;
@@ -128,6 +153,7 @@
             transform: scale(1.05);
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
         }
+
         .site-name {
             font-weight: 600;
             margin-bottom: 13px;
@@ -165,12 +191,20 @@
             color: #b6b2b2;
             border-color: var(--outline);
         }
-        @media screen and (max-width: 600px) {
-            header { font-size: 1.3rem; letter-spacing: 2px;}
-            .site-card { min-width: 130px; padding: 11px 9px; font-size: 1rem;}
-            .banner h2 { font-size: 1rem;}
-            .category-btn { font-size: 0.87rem; padding: 8px 12px;}
+
+        @media screen and (max-width: 900px) {
+            .site-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            }
         }
+        @media screen and (max-width: 600px) {
+            header { font-size: 1.3rem; letter-spacing: 2px; }
+            .site-card { padding: 16px 14px; }
+            .banner h2 { font-size: 1rem; }
+            .category-btn { font-size: 0.87rem; padding: 8px 12px; }
+            .site-grid { gap: 20px 14px; }
+        }
+
         .notes {
             width: 100%;
             text-align: center;
@@ -205,174 +239,65 @@
     </style>
 </head>
 <body>
-    <header>
-        看片儿导航
-    </header>
-    <div class="banner">
-        <h2>甄选国内外优秀影视资源站</h2>
-        <div class="banner-action">
-            <button class="backup-btn" onclick="window.open('https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4','_blank')">
-                网站备份
-            </button>
+    <div class="container">
+        <header>
+            看片儿导航
+        </header>
+        <div class="banner">
+            <h2>甄选国内外优秀影视资源站</h2>
+            <div class="banner-action">
+                <button class="backup-btn" onclick="window.open('https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4','_blank')">
+                    网站备份
+                </button>
+            </div>
         </div>
+        <div class="category-btns">
+            <button class="category-btn active" id="btn-online" onclick="switchCategory('online')">在线</button>
+            <button class="category-btn" id="btn-pan" onclick="switchCategory('pan')">网盘</button>
+            <button class="category-btn" id="btn-bt" onclick="switchCategory('bt')">BT</button>
+        </div>
+        <div class="site-grid" id="siteGrid"></div>
+        <div class="notes">
+            注：EE3邀请码：FMHY，访问不畅请自行搭梯子
+        </div>
+        <footer>
+            用心制作 | Made with ❤️
+            <a href="https://github.com/kanpianer/pianer" target="_blank">Github</a>
+        </footer>
     </div>
-    <div class="category-btns">
-        <button class="category-btn active" id="btn-online" onclick="switchCategory('online')">在线</button>
-        <button class="category-btn" id="btn-pan" onclick="switchCategory('pan')">网盘</button>
-        <button class="category-btn" id="btn-bt" onclick="switchCategory('bt')">BT</button>
-    </div>
-    <div class="site-grid" id="siteGrid">
-        <!-- 网格区域将由JS动态填充 -->
-    </div>
-    <div class="notes">
-        注：EE3邀请码：FMHY，访问不畅请自行搭梯子
-    </div>
-    <footer>
-        用心制作 | Made with ❤️
-        <a href="https://github.com/kanpianer/pianer" target="_blank">Github</a>
-    </footer>
+
 <script>
-    // 网站列表（由括号内容转为结构体）
+    // 网站列表
     const SITES = [
-        {
-            name: "厂长资源",
-            main_url: "https://cz233.com/",
-            backup_url: "https://www.czzy.site/",
-            tags: ["在线"]
-        },
-        {
-            name: "低端影视",
-            main_url: "https://ddys.pro/",
-            backup_url: "https://ddys.site/",
-            tags: ["在线","网盘"]
-        },
-        {
-            name: "NO视频",
-            main_url: "https://www.novipnoad.cc/",
-            backup_url: "https://findno.tv/",
-            tags: ["在线"]
-        },
-        {
-            name: "HDmoli",
-            main_url: "https://www.hdmoli.pro/",
-            backup_url: "https://molicp.com/",
-            tags: ["在线","网盘"]
-        },
-        {
-            name: "BT之家",
-            main_url: "https://1lou.one/",
-            backup_url: "https://1lou.cc/",
-            tags: ["BT","网盘"]
-        },
-        {
-            name: "观影",
-            main_url: "https://gyg.la/",
-            backup_url: "https://gyg.si/",
-            tags: ["在线","网盘","BT"]
-        },
-        {
-            name: "两个BT",
-            main_url: "https://bttwo.me/",
-            backup_url: "https://bttwo.vip/",
-            tags: ["在线"]
-        },
-        {
-            name: "修罗影视",
-            main_url: "https://xl01.com.de/",
-            backup_url: "https://xlys.me/",
-            tags: ["在线","BT"]
-        },
-        {
-            name: "影巢",
-            main_url: "https://hdhive.com/search",
-            backup_url: "",
-            tags: ["网盘","BT"]
-        },
-        {
-            name: "PanSearch",
-            main_url: "https://pansearch.me/",
-            backup_url: "",
-            tags: ["网盘"]
-        },
-        {
-            name: "GoPlay",
-            main_url: "https://goplay.su/",
-            backup_url: "https://discord.com/invite/yY2P3DQR8S",
-            tags: ["在线"]
-        },
-        {
-            name: "EE3",
-            main_url: "https://ee3.me/",
-            backup_url: "https://rips.cc/",
-            tags: ["在线"]
-        },
-        {
-            name: "hexa",
-            main_url: "https://hexa.watch/",
-            backup_url: "",
-            tags: ["在线"]
-        },
-        {
-            name: "Fmovies+",
-            main_url: "https://fmovies.gd/home",
-            backup_url: "",
-            tags: ["在线"]
-        },
-        {
-            name: "Cinegram",
-            main_url: "https://cinegram.net/home",
-            backup_url: "",
-            tags: ["在线"]
-        },
-        {
-            name: "Nunflix",
-            main_url: "https://nunflix.org/",
-            backup_url: "https://nunflix.app/",
-            tags: ["在线"]
-        },
-        {
-            name: "BEECH",
-            main_url: "https://www.beech.watch",
-            backup_url: "https://mocine.cam/",
-            tags: ["在线"]
-        },
-        {
-            name: "1337X",
-            main_url: "https://1337x.to/",
-            backup_url: "https://1337x-status.org/",
-            tags: ["BT"]
-        },
-        {
-            name: "YTS",
-            main_url: "https://yts.mx/",
-            backup_url: "https://gosites.org/yts",
-            tags: ["BT"]
-        },
-        {
-            name: "EXT",
-            main_url: "https://ext.to/",
-            backup_url: "",
-            tags: ["BT"]
-        },
-        {
-            name: "BDigg",
-            main_url: "https://btdig.com/",
-            backup_url: "",
-            tags: ["BT"]
-        },
-        {
-            name: "Knaben",
-            main_url: "https://knaben.org/",
-            backup_url: "",
-            tags: ["BT"]
-        }
+        { name: "厂长资源", main_url: "https://cz233.com/", backup_url: "https://www.czzy.site/", tags: ["在线"] },
+        { name: "低端影视", main_url: "https://ddys.pro/", backup_url: "https://ddys.site/", tags: ["在线","网盘"] },
+        { name: "NO视频", main_url: "https://www.novipnoad.cc/", backup_url: "https://findno.tv/", tags: ["在线"] },
+        { name: "HDmoli", main_url: "https://www.hdmoli.pro/", backup_url: "https://molicp.com/", tags: ["在线","网盘"] },
+        { name: "BT之家", main_url: "https://1lou.one/", backup_url: "https://1lou.cc/", tags: ["BT","网盘"] },
+        { name: "观影", main_url: "https://gyg.la/", backup_url: "https://gyg.si/", tags: ["在线","网盘","BT"] },
+        { name: "两个BT", main_url: "https://bttwo.me/", backup_url: "https://bttwo.vip/", tags: ["在线"] },
+        { name: "修罗影视", main_url: "https://xl01.com.de/", backup_url: "https://xlys.me/", tags: ["在线","BT"] },
+        { name: "影巢", main_url: "https://hdhive.com/search", backup_url: "", tags: ["网盘","BT"] },
+        { name: "PanSearch", main_url: "https://pansearch.me/", backup_url: "", tags: ["网盘"] },
+        { name: "GoPlay", main_url: "https://goplay.su/", backup_url: "https://discord.com/invite/yY2P3DQR8S", tags: ["在线"] },
+        { name: "EE3", main_url: "https://ee3.me/", backup_url: "https://rips.cc/", tags: ["在线"] },
+        { name: "hexa", main_url: "https://hexa.watch/", backup_url: "", tags: ["在线"] },
+        { name: "Fmovies+", main_url: "https://fmovies.gd/home", backup_url: "", tags: ["在线"] },
+        { name: "Cinegram", main_url: "https://cinegram.net/home", backup_url: "", tags: ["在线"] },
+        { name: "Nunflix", main_url: "https://nunflix.org/", backup_url: "https://nunflix.app/", tags: ["在线"] },
+        { name: "BEECH", main_url: "https://www.beech.watch", backup_url: "https://mocine.cam/", tags: ["在线"] },
+        { name: "1337X", main_url: "https://1337x.to/", backup_url: "https://1337x-status.org/", tags: ["BT"] },
+        { name: "YTS", main_url: "https://yts.mx/", backup_url: "https://gosites.org/yts", tags: ["BT"] },
+        { name: "EXT", main_url: "https://ext.to/", backup_url: "", tags: ["BT"] },
+        { name: "BDigg", main_url: "https://btdig.com/", backup_url: "", tags: ["BT"] },
+        { name: "Knaben", main_url: "https://knaben.org/", backup_url: "", tags: ["BT"] }
     ];
 
     let currentCategory = 'online';
 
     function switchCategory(category) {
         currentCategory = category;
-        ['online','pan','bt'].forEach((c,i) => {
+        ['online','pan','bt'].forEach(c => {
             document.getElementById(`btn-${c}`).classList.toggle('active', c === category);
         });
         renderGrid();
@@ -381,49 +306,52 @@
     function renderGrid() {
         const grid = document.getElementById("siteGrid");
         grid.innerHTML = '';
+
         let matchTag;
-        if(currentCategory === "online") matchTag="在线";
-        if(currentCategory === "pan") matchTag="网盘";
-        if(currentCategory === "bt") matchTag="BT";
-        let filtered = SITES.filter(site=>site.tags.includes(matchTag));
-        filtered.forEach(site=>{
-            let card = document.createElement("div");
+        if (currentCategory === "online") matchTag = "在线";
+        if (currentCategory === "pan") matchTag = "网盘";
+        if (currentCategory === "bt") matchTag = "BT";
+
+        const filtered = SITES.filter(site => site.tags.includes(matchTag));
+
+        filtered.forEach(site => {
+            const card = document.createElement("div");
             card.className = 'site-card';
 
-            // Add click behavior to the entire card
+            // 整卡片可点击
             card.onclick = function() {
                 window.open(site.main_url, "_blank");
             };
 
-            let btn = document.createElement('button');
+            const btn = document.createElement('button');
             btn.className = 'site-name';
             btn.textContent = site.name;
             btn.onclick = function(event){
-                event.stopPropagation();  // Prevent triggering the card's click event
+                event.stopPropagation();
                 window.open(site.main_url,"_blank");
-            }
+            };
             card.appendChild(btn);
 
-            // 备份按钮
-            if(site.backup_url && site.backup_url.trim().length > 0){
-                let backupBtn = document.createElement('button');
+            if (site.backup_url && site.backup_url.trim().length > 0) {
+                const backupBtn = document.createElement('button');
                 backupBtn.className = "backup-link-btn";
                 backupBtn.textContent = "备份网址";
                 backupBtn.onclick = (event) => {
-                    event.stopPropagation();  // Prevent triggering the card's click event
+                    event.stopPropagation();
                     window.open(site.backup_url,"_blank");
-                }
+                };
                 card.appendChild(backupBtn);
             } else {
-                let backupNoneBtn = document.createElement('button');
+                const backupNoneBtn = document.createElement('button');
                 backupNoneBtn.className = "backup-none-btn";
                 backupNoneBtn.textContent = "没有备份";
                 backupNoneBtn.onclick = (event) => {
-                    event.stopPropagation();  // Prevent triggering the card's click event
+                    event.stopPropagation();
                     window.open("https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4","_blank");
-                }
+                };
                 card.appendChild(backupNoneBtn);
             }
+
             grid.appendChild(card);
         });
     }
