@@ -77,23 +77,6 @@
             flex-direction: column;
             align-items: center;
         }
-        .banner .backup-btn {
-            /* 增大30%：padding 与字号（相对你的上个版本） */
-            padding: 7.02px 24.96px;
-            font-size: 0.78rem;
-            color: var(--accent);
-            border: 2px solid var(--accent);
-            background: transparent;
-            border-radius: 28px;
-            outline: none;
-            cursor: pointer;
-            margin-bottom: 16px;
-            transition: background 0.18s, color 0.18s;
-        }
-        .banner .backup-btn:hover {
-            background: var(--accent);
-            color: var(--background);
-        }
         .category-btns {
             display: flex;
             gap: 14px;
@@ -208,13 +191,34 @@
         }
 
         .notes {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             width: 100%;
             text-align: center;
             font-size: .98rem;
             color: #bcb8c0;
-            margin-bottom: 12px; /* Reduced margin-bottom */
-            margin-top: 12px;    /* Reduced margin-top */
+            margin-bottom: 12px;
+            margin-top: 12px;
             line-height: 1.7;
+        }
+
+        .backup-btn-small {
+            padding: 5.2px 18.5px;  /* 26% smaller than the original */
+            font-size: 0.58rem;  /* Adjusted 26% smaller font size */
+            margin-left: 12px;  /* Space between the text and the button */
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            background: transparent;
+            border-radius: 28px;
+            outline: none;
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s;
+        }
+
+        .backup-btn-small:hover {
+            background: var(--accent);
+            color: var(--background);
         }
 
         footer {
@@ -249,11 +253,7 @@
         </header>
         <div class="banner">
             <h2>甄选国内外优秀影视资源站</h2>
-            <div class="banner-action">
-                <button class="backup-btn" onclick="window.open('https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4','_blank')">
-                    网站备份
-                </button>
-            </div>
+            <!-- Removed the "网站备份" button below the heading -->
         </div>
         <div class="category-btns">
             <button class="category-btn active" id="btn-online" onclick="switchCategory('online')">在线</button>
@@ -263,6 +263,9 @@
         <div class="site-grid" id="siteGrid"></div>
         <div class="notes">
             注：EE3邀请码：FMHY，访问不畅请自行搭梯子
+            <button class="backup-btn-small" onclick="window.open('https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4','_blank')">
+                网站备份
+            </button>
         </div>
         <footer>
             用心制作 | Made with ❤️
