@@ -11,7 +11,7 @@
             --primary: #fff;
             --background: #181a20;
             --accent: #ff5630;
-            --muted: #343646;
+            --muted: rgba(52, 54, 70, 0.5); /* Updated to semi-transparent */
             --button-hover: #353949;
             --outline: #ff56309c;
             --fixed: #ff5630;
@@ -23,7 +23,7 @@
         html, body {
             margin: 0;
             padding: 0;
-            background: var(--background);
+            background: linear-gradient(to right, #652e25, #181a20); /* Gradient background */
             color: var(--primary);
             font-family: sans-serif;
             min-height: 100vh;
@@ -246,7 +246,7 @@
           background: var(--muted);
         }
         ::-webkit-scrollbar-thumb {
-          background: #343646;
+          background: rgba(52, 54, 70, 0.5);
           border-radius: 6px;
         }
     </style>
