@@ -113,7 +113,7 @@
             width: 100%;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));  /* Flexible columns */
-            gap: 30px 20px;
+            gap: 22.2px 14.8px; /* 缩小 26%：原 gap: 30px 20px -> 30*0.74=22.2, 20*0.74=14.8 */
             justify-items: center;  /* Ensures site cards are centered horizontally */
             align-items: start;     /* Align cards at the top of their grid cell */
             margin-bottom: 8px;
@@ -187,7 +187,7 @@
             .site-card { padding: 16px 14px; }
             .banner h2 { font-size: 1rem; }
             .category-btn { font-size: 0.87rem; padding: 8px 12px; }
-            .site-grid { gap: 20px 14px; }
+            .site-grid { gap: 14.8px 10.4px; } /* 缩小 26%：原 20px 14px -> 14.8, 10.4 */
         }
 
         .notes {
@@ -260,8 +260,8 @@
             <h2>甄选国内外优秀影视资源站</h2>
         </div>
         <div class="category-btns">
-            <button class="category-btn active" id="btn-online" onclick="switchCategory('online')">在线</button>
-            <button class="category-btn" id="btn-pan" onclick="switchCategory('pan')">网盘</button>
+            <button class="category-btn" id="btn-online" onclick="switchCategory('online')">在线</button>
+            <button class="category-btn active" id="btn-pan" onclick="switchCategory('pan')">网盘</button>
             <button class="category-btn" id="btn-bt" onclick="switchCategory('bt')">BT</button>
         </div>
         <div class="site-grid" id="siteGrid"></div>
@@ -299,7 +299,7 @@
         { name: "影巢", main_url: "https://hdhive.com/search", backup_url: "", tags: ["网盘", "BT"] },
         { name: "PanSearch", main_url: "https://pansearch.me/", backup_url: "", tags: ["网盘"] },
         { name: "爱盼", main_url: "https://www.aipan.me", backup_url: "", tags: ["网盘"] },
-        { name: "阿里云资源", main_url: "https://slowread.net/", backup_url: "", tags: ["网盘"] }, 
+        { name: "阿里云资源", main_url: "https://slowread.net/", backup_url: "", tags: ["网盘"] }, 
         { name: "观影 GYING", main_url: "https://gyg.la/", backup_url: "https://gyg.si/", tags: ["网盘", "BT"] },
         { name: "ShowBox", main_url: "https://www.showbox.media/", backup_url: "", tags: ["网盘"] },
         
@@ -312,12 +312,6 @@
         { name: "Nunflix", main_url: "https://nunflix.org/", backup_url: "https://nunflix.app/", tags: ["在线"] },
         { name: "Flixer", main_url: "https://flixer.su/", backup_url: "https://discord.com/invite/Z9Hjeqe4Fr", tags: ["在线"] },
         { name: "HiAnime", main_url: "https://hianime.to/home", backup_url: "https://discord.gg/hianime", tags: ["在线"] },
-         /*  { name: "Movies7", main_url: "https://movies7.im", backup_url: "https://discord.gg/hianime", tags: ["在线"] },
-        { name: "NEPU", main_url: "https://nepu.to", backup_url: "https://rar.to", tags: ["在线"] },
-        { name: "456movie", main_url: "https://456movie.net/", backup_url: "https://345movie.net/movies", tags: ["在线"] },
-        { name: "BEECH", main_url: "https://www.beech.watch", backup_url: "https://mocine.cam/", tags: ["在线"] },
-        { name: "hexa", main_url: "https://hexa.watch/", backup_url: "", tags: ["在线"] }, */
-
         
         { name: "BT之家", main_url: "https://1lou.one/", backup_url: "https://1lou.cc/", tags: ["BT", "网盘"] },
         { name: "磁力熊", main_url: "https://www.cilixiong.org", backup_url: "https://www.cilixiong.cc", tags: ["BT"] },
@@ -331,11 +325,10 @@
         { name: "ACG.RIP", main_url: "https://acg.rip", backup_url: "", tags: ["BT"] },
         { name: "LimeTorrents", main_url: "https://www.limetorrents.co", backup_url: "https://www.limetorrents.asia", tags: ["BT"] },
         { name: "Piratic", main_url: "https://piratic.org", backup_url: "", tags: ["BT"] },
-        /*{ name: "Proxy Ninja", main_url: "https://proxyninja.org", backup_url: "", tags: ["BT"] },*/
-   
     ];
 
-    let currentCategory = 'online';
+    // 默认分类改为 'pan'，页面初次加载时显示网盘列表
+    let currentCategory = 'pan';
 
     function switchCategory(category) {
         currentCategory = category;
@@ -398,6 +391,7 @@
         });
     }
 
+    // 页面加载时渲染网盘（pan）分类
     renderGrid();
 </script>
 </body>
