@@ -412,10 +412,11 @@
 
 <script>
 /*
-  现实感星空脚本说明（修改点）：
-  - 星星形状改为写实：小点 + 柔和晕光，较亮的有弱的衍射/光芒（4向短光线）
-  - 保持之前减少数量（area / 12000），但闪烁幅度更小、更自然（接近人眼看到的“轻微闪烁”）
-  - 尊重 prefers-reduced-motion：用户要求减少动画时只绘制静态帧
+ Starfield script (更新说明):
+ - 星星数量减半（密度改为 area / 12000）
+ - 闪烁更明显：振幅和速度都加大，同时半径也随闪烁轻微变化
+ - 星星形状改为漫画常见的“长四角”（长臂菱形），较大的星带有柔和光晕
+ - 尊重 prefers-reduced-motion（减少动画偏好时只绘制静态帧）
 */
 
 (function() {
@@ -427,45 +428,47 @@
 
     function rand(min, max) { return min + Math.random() * (max - min); }
 
+    // 生成星星
     function generateStars() {
         stars = [];
         const vw = Math.max(1, window.innerWidth);
         const vh = Math.max(1, window.innerHeight);
         const area = vw * vh;
-        // 密度（保持之前减半的设定）
+        // 密度降低为原来的一半
         let count = Math.round(area / 12000);
+        // 限制数量（比原来更少）
         count = Math.max(40, Math.min(count, 400));
 
         for (let i = 0; i < count; i++) {
-            // 偏向小尺寸
-            const bias = Math.pow(Math.random(), 2);
-            const r = 0.4 + bias * 2.8; // 基础视觉半径（CSS px）
+            // 偏向产生小星
+            const sizeBias = Math.pow(Math.random(), 2);
+            const r = 0.5 + sizeBias * 2.6; // 基础尺寸（CSS px）
             stars.push({
                 x: Math.random() * vw,
                 y: Math.random() * vh,
                 r: r,
-                baseAlpha: 0.25 + Math.random() * 0.9, // 基础亮度
-                // 闪烁频率：较自然、幅度小
-                twinkleSpeed: 0.3 + Math.random() * 1.6,
-                twinkleAmp: 0.08 + Math.random() * 0.22, // 振幅较小，接近真实视觉
+                baseAlpha: 0.35 + Math.random() * 0.85,
+                // 增大速度范围以增强闪烁感
+                twinkleSpeed: 0.6 + Math.random() * 2.2,
                 phase: Math.random() * Math.PI * 2,
-                colorTemp: 2600 + Math.random() * 6000 // 色温范围，供偏色使用（暖->冷）
+                rotation: Math.random() * Math.PI * 2,
+                colorShift: (Math.random() * 40) - 10
             });
         }
 
-        // 少量较亮的恒星（会显得更有“星芒”）
-        const bigCount = Math.round(count * 0.02);
+        // 少量更大的 spark（比例也减半）
+        const bigCount = Math.round(count * 0.01); // 比例约 1%
         for (let j = 0; j < bigCount; j++) {
-            const r = 2.6 + Math.random() * 4.0;
+            const r = 2.8 + Math.random() * 4.2;
             stars.push({
                 x: Math.random() * vw,
                 y: Math.random() * vh,
                 r: r,
-                baseAlpha: 0.7 + Math.random() * 0.6,
-                twinkleSpeed: 0.15 + Math.random() * 0.8,
-                twinkleAmp: 0.06 + Math.random() * 0.18,
+                baseAlpha: 0.7 + Math.random() * 0.5,
+                twinkleSpeed: 0.3 + Math.random() * 1.2,
                 phase: Math.random() * Math.PI * 2,
-                colorTemp: 3000 + Math.random() * 4000
+                rotation: Math.random() * Math.PI * 2,
+                colorShift: (Math.random() * 40) - 10
             });
         }
     }
@@ -483,87 +486,74 @@
         draw(0);
     }
 
-    // 色温转 rgb（简化版）
-    function colorFromTemp(k) {
-        // k in [1000,40000], we use simplified approximation producing warm->cool tints
-        const t = Math.min(40000, Math.max(1000, k)) / 1000;
-        // approximate using simple mapping to get warm (yellowish) to cool (bluish)
-        const r = Math.min(255, Math.max(0, (t <= 6.5 ? 255 : 329.698727446 * Math.pow(t - 2.0, -0.1332047592))));
-        const g = Math.min(255, Math.max(0, (t <= 6.5 ? 99.4708025861 * Math.log(t) - 161.1195681661 : 288.1221695283 * Math.pow(t - 2, -0.0755148492))));
-        const b = Math.min(255, Math.max(0, (t >= 6.5 ? 255 : (t <= 2 ? 0 : 138.5177312231 * Math.log(t - 1.0) - 305.0447927307))));
-        return { r: Math.round(r), g: Math.round(g), b: Math.round(b) };
-    }
-
-    // 绘制真实感单颗星
-    function drawRealStar(s, t) {
-        const tw = Math.sin(s.phase + t * s.twinkleSpeed * 2.0); // -1..1
-        const alpha = Math.max(0, Math.min(1, s.baseAlpha * (1 + s.twinkleAmp * tw)));
-        const drawR = Math.max(0.25, s.r * (1 + 0.06 * tw)); // 轻微尺寸变化
-        const col = colorFromTemp(s.colorTemp);
-        // core color微偏色温
-        const coreColor = `rgba(${col.r},${col.g},${col.b},${Math.min(1, alpha * 1.0)})`;
-
+    // 绘制长四角星（漫画风格）
+    function drawLongDiamond(x, y, r, alpha, rotation, glowColor) {
         ctx.save();
-        ctx.translate(s.x, s.y);
+        ctx.translate(x, y);
+        ctx.rotate(rotation);
 
-        // glow: radial gradient,较短的核心+更长的柔光晕（真实相机/肉眼看到的是中心点加漫散射）
-        const glowR = Math.max(6, drawR * 6);
-        const g = ctx.createRadialGradient(0, 0, 0, 0, 0, glowR);
-        g.addColorStop(0, coreColor);
-        g.addColorStop(0.12, `rgba(255,255,255,${alpha * 0.75})`); // very bright inner ring
-        g.addColorStop(0.28, `rgba(${col.r},${col.g},${col.b},${alpha * 0.18})`);
-        g.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(0, 0, glowR, 0, Math.PI * 2);
-        ctx.fill();
-
-        // tiny bright core
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(255,255,255,${Math.min(1, alpha * 1.2)})`;
-        ctx.arc(0, 0, drawR, 0, Math.PI * 2);
-        ctx.fill();
-
-        // 对于较亮的恒星绘制微弱短光芒（4向），模拟望远镜/镜头衍射视觉，但保持自然不夸张
-        if (s.baseAlpha > 0.65 || s.r > 2.0) {
-            ctx.globalCompositeOperation = 'lighter';
-            const spikeLen = Math.max(8, drawR * 8);
-            const spikeWidth = Math.max(0.6, drawR * 0.28);
-            ctx.strokeStyle = `rgba(255,255,255,${alpha * 0.35})`;
-            ctx.lineCap = 'round';
-            ctx.lineWidth = spikeWidth;
-            // draw 4 spikes (vertical/horizontal and two diagonals)
-            const spikes = [
-                0, Math.PI / 2, Math.PI / 4, -Math.PI / 4
-            ];
-            spikes.forEach(angle => {
-                ctx.save();
-                ctx.rotate(angle);
-                // center-to-top
-                ctx.beginPath();
-                ctx.moveTo(0, -spikeLen * 0.05);
-                ctx.lineTo(0, -spikeLen);
-                ctx.stroke();
-                ctx.restore();
-            });
-            ctx.globalCompositeOperation = 'source-over';
+        // glow for larger stars (if r is big)
+        if (r > 1.4) {
+            const glowR = Math.max(12, r * 6);
+            const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, glowR);
+            // 温暖偏色与透明度组合
+            grad.addColorStop(0, `rgba(255,255,255,${Math.min(1, alpha * 1.0)})`);
+            grad.addColorStop(0.15, `rgba(255,240,220,${alpha * 0.28})`);
+            grad.addColorStop(0.45, `rgba(200,220,255,${alpha * 0.08})`);
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(0, 0, glowR, 0, Math.PI * 2);
+            ctx.fill();
         }
+
+        // Draw the long four-pointed diamond (长四角)
+        ctx.beginPath();
+        // top point (长)
+        ctx.moveTo(0, -r * 3.5);
+        // right
+        ctx.lineTo(r * 1.2, 0);
+        // bottom
+        ctx.lineTo(0, r * 3.5);
+        // left
+        ctx.lineTo(-r * 1.2, 0);
+        ctx.closePath();
+        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+        ctx.fill();
+
+        // inner short diamond to make it "cartoon sparkle" 更亮的中心
+        ctx.beginPath();
+        ctx.moveTo(0, -r);
+        ctx.lineTo(r * 0.6, 0);
+        ctx.lineTo(0, r);
+        ctx.lineTo(-r * 0.6, 0);
+        ctx.closePath();
+        ctx.fillStyle = `rgba(255,255,255,${Math.min(1, alpha * 1.2)})`;
+        ctx.fill();
 
         ctx.restore();
     }
 
-    // 绘制整帧
+    // 绘制帧
     function draw(timeMs) {
         const t = (timeMs || 0) / 1000;
         ctx.clearRect(0, 0, width, height);
 
-        // subtle background faint nebulosity to add depth (very faint)
-        // (kept minimal so stars remain dominant)
-        // ctx.fillStyle = 'rgba(3,6,12,0.03)';
-        // ctx.fillRect(0,0,width,height);
-
         for (let i = 0; i < stars.length; i++) {
-            drawRealStar(stars[i], t);
+            const s = stars[i];
+            // 更明显的正弦闪烁（振幅更大），并且频率提高
+            const tw = 0.5 + 0.5 * Math.sin(s.phase + t * s.twinkleSpeed * 3.0);
+            // alpha 振幅扩大，使得明暗差更明显
+            const alpha = Math.max(0, Math.min(1, s.baseAlpha * (0.25 + 1.05 * tw)));
+            // 半径随闪烁轻微变化，产生“跳动”感
+            const rScale = 1 + 0.45 * Math.sin(s.phase * 1.3 + t * s.twinkleSpeed * 3.2);
+            const drawR = Math.max(0.35, s.r * rScale);
+
+            // 旋转也随时间缓慢变化，让四角星不显呆板
+            const rotation = s.rotation + Math.sin(t * s.twinkleSpeed * 0.6 + s.phase) * 0.15;
+
+            // 使用长四角星形状绘制（所有星都用这个形状）
+            drawLongDiamond(s.x, s.y, drawR, alpha, rotation, s.colorShift);
         }
     }
 
@@ -581,6 +571,7 @@
         window._starResizeTimeout = setTimeout(resizeCanvas, 120);
     });
 
+    // 根据偏好启停动画
     if (!reduceMotion) {
         rafId = window.requestAnimationFrame(animate);
         if (window.matchMedia) {
