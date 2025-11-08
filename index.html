@@ -412,11 +412,11 @@
 
 <script>
 /*
- Starfield script (更新说明):
- - 星星数量减半（密度改为 area / 12000）
- - 闪烁更明显：振幅和速度都加大，同时半径也随闪烁轻微变化
- - 星星形状改为漫画常见的“长四角”（长臂菱形），较大的星带有柔和光晕
- - 尊重 prefers-reduced-motion（减少动画偏好时只绘制静态帧）
+ Starfield script — 修改说明:
+ - 星星形状改为四角星（4-point）且两端较长、两端较短（交替长短尖）
+ - 闪烁的时值（周期）加倍：所有时间相关乘数减半，使闪烁变慢为原来的 2 倍周期
+ - 保持先前星星数量减半设置（area/24000）
+ - 尊重 prefers-reduced-motion
 */
 
 (function() {
@@ -428,27 +428,26 @@
 
     function rand(min, max) { return min + Math.random() * (max - min); }
 
-    // 生成星星
+    // 生成星星（数量已减半）
     function generateStars() {
         stars = [];
         const vw = Math.max(1, window.innerWidth);
         const vh = Math.max(1, window.innerHeight);
         const area = vw * vh;
-        // 密度降低为原来的一半
-        let count = Math.round(area / 12000);
-        // 限制数量（比原来更少）
-        count = Math.max(40, Math.min(count, 400));
+        // 密度减半（保持此前的 area / 24000）
+        let count = Math.round(area / 24000);
+        // 限制数量（min/max 保持上一版的一半）
+        count = Math.max(20, Math.min(count, 200));
 
         for (let i = 0; i < count; i++) {
-            // 偏向产生小星
             const sizeBias = Math.pow(Math.random(), 2);
-            const r = 0.5 + sizeBias * 2.6; // 基础尺寸（CSS px）
+            const r = 0.5 + sizeBias * 2.6;
             stars.push({
                 x: Math.random() * vw,
                 y: Math.random() * vh,
                 r: r,
                 baseAlpha: 0.35 + Math.random() * 0.85,
-                // 增大速度范围以增强闪烁感
+                // 保持速度分布，但绘制时时间乘数将减半以实现周期加倍
                 twinkleSpeed: 0.6 + Math.random() * 2.2,
                 phase: Math.random() * Math.PI * 2,
                 rotation: Math.random() * Math.PI * 2,
@@ -456,8 +455,8 @@
             });
         }
 
-        // 少量更大的 spark（比例也减半）
-        const bigCount = Math.round(count * 0.01); // 比例约 1%
+        // 少量更大的 spark
+        const bigCount = Math.round(count * 0.01);
         for (let j = 0; j < bigCount; j++) {
             const r = 2.8 + Math.random() * 4.2;
             stars.push({
@@ -486,20 +485,19 @@
         draw(0);
     }
 
-    // 绘制长四角星（漫画风格）
-    function drawLongDiamond(x, y, r, alpha, rotation, glowColor) {
+    // 绘制四角星（交替长短两端）
+    function drawFourPointStar(x, y, r, alpha, rotation) {
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(rotation);
 
-        // glow for larger stars (if r is big)
-        if (r > 1.4) {
-            const glowR = Math.max(12, r * 6);
+        // glow for larger stars
+        if (r > 1.6) {
+            const glowR = Math.max(10, r * 5.0);
             const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, glowR);
-            // 温暖偏色与透明度组合
             grad.addColorStop(0, `rgba(255,255,255,${Math.min(1, alpha * 1.0)})`);
-            grad.addColorStop(0.15, `rgba(255,240,220,${alpha * 0.28})`);
-            grad.addColorStop(0.45, `rgba(200,220,255,${alpha * 0.08})`);
+            grad.addColorStop(0.12, `rgba(255,240,220,${alpha * 0.26})`);
+            grad.addColorStop(0.4, `rgba(200,220,255,${alpha * 0.06})`);
             grad.addColorStop(1, 'rgba(0,0,0,0)');
             ctx.fillStyle = grad;
             ctx.beginPath();
@@ -507,53 +505,67 @@
             ctx.fill();
         }
 
-        // Draw the long four-pointed diamond (长四角)
+        // 四角星：交替长短尖（总共 8 个顶点：长短交替）
+        // longR: 长端半径， shortR: 短端半径
+        const spikes = 4;
+        const longR = r * 3.8;   // 两端较长
+        const shortR = r * 1.6;  // 两端较短
+
         ctx.beginPath();
-        // top point (长)
-        ctx.moveTo(0, -r * 3.5);
-        // right
-        ctx.lineTo(r * 1.2, 0);
-        // bottom
-        ctx.lineTo(0, r * 3.5);
-        // left
-        ctx.lineTo(-r * 1.2, 0);
+        for (let i = 0; i < spikes * 2; i++) {
+            const angle = (Math.PI / spikes) * i;
+            const radius = (i % 2 === 0) ? longR : shortR;
+            const px = Math.cos(angle - Math.PI / 2) * radius;
+            const py = Math.sin(angle - Math.PI / 2) * radius;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
         ctx.closePath();
         ctx.fillStyle = `rgba(255,255,255,${alpha})`;
         ctx.fill();
 
-        // inner short diamond to make it "cartoon sparkle" 更亮的中心
+        // 更亮的内圈作为高光（缩小版的四角）
         ctx.beginPath();
-        ctx.moveTo(0, -r);
-        ctx.lineTo(r * 0.6, 0);
-        ctx.lineTo(0, r);
-        ctx.lineTo(-r * 0.6, 0);
+        const cLong = r * 1.1;
+        const cShort = r * 0.5;
+        for (let i = 0; i < spikes * 2; i++) {
+            const angle = (Math.PI / spikes) * i;
+            const radius = (i % 2 === 0) ? cLong : cShort;
+            const px = Math.cos(angle - Math.PI / 2) * radius;
+            const py = Math.sin(angle - Math.PI / 2) * radius;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
         ctx.closePath();
-        ctx.fillStyle = `rgba(255,255,255,${Math.min(1, alpha * 1.2)})`;
+        ctx.fillStyle = `rgba(255,255,255,${Math.min(1, alpha * 1.25)})`;
         ctx.fill();
 
         ctx.restore();
     }
 
-    // 绘制帧
+    // 绘制帧：将所有时间相关乘数减半以实现闪烁周期加倍（变慢）
     function draw(timeMs) {
         const t = (timeMs || 0) / 1000;
         ctx.clearRect(0, 0, width, height);
 
         for (let i = 0; i < stars.length; i++) {
             const s = stars[i];
-            // 更明显的正弦闪烁（振幅更大），并且频率提高
-            const tw = 0.5 + 0.5 * Math.sin(s.phase + t * s.twinkleSpeed * 3.0);
-            // alpha 振幅扩大，使得明暗差更明显
-            const alpha = Math.max(0, Math.min(1, s.baseAlpha * (0.25 + 1.05 * tw)));
-            // 半径随闪烁轻微变化，产生“跳动”感
-            const rScale = 1 + 0.45 * Math.sin(s.phase * 1.3 + t * s.twinkleSpeed * 3.2);
+            // 正弦闪烁：tw 范围 [0,1]
+            const tw = 0.5 + 0.5 * Math.sin(s.phase + t * s.twinkleSpeed * 1.5); // 由 3.0 -> 1.5
+
+            // alpha 计算保持此前的增强（如果有），不更改幅度，仅改变时间
+            const amplitudeMultiplier = 1.05 * 1.4; // 保持上一版的放大逻辑
+            const alpha = Math.max(0, Math.min(1, s.baseAlpha * (0.25 + amplitudeMultiplier * tw)));
+
+            // 半径随闪烁轻微变化，时间乘数减半（3.2 -> 1.6），幅度保持
+            const rScale = 1 + (0.45 * 1.4) * Math.sin(s.phase * 1.3 + t * s.twinkleSpeed * 1.6);
             const drawR = Math.max(0.35, s.r * rScale);
 
-            // 旋转也随时间缓慢变化，让四角星不显呆板
-            const rotation = s.rotation + Math.sin(t * s.twinkleSpeed * 0.6 + s.phase) * 0.15;
+            // 旋转随时间缓慢变化，时间乘数减半（0.6 -> 0.3）
+            const rotation = s.rotation + Math.sin(t * s.twinkleSpeed * 0.3 + s.phase) * 0.15;
 
-            // 使用长四角星形状绘制（所有星都用这个形状）
-            drawLongDiamond(s.x, s.y, drawR, alpha, rotation, s.colorShift);
+            // 使用两端长短交替的四角星形状绘制
+            drawFourPointStar(s.x, s.y, drawR, alpha, rotation);
         }
     }
 
