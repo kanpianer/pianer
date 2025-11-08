@@ -20,15 +20,44 @@
             --page-max-width: 1200px;
             --page-padding-x: clamp(16px, 4vw, 40px);
         }
-        html, body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(to right, #652e25, #181a20); /* Gradient background */
-            color: var(--primary);
-            font-family: sans-serif;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
+html, body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(ellipse at bottom, #0d1b2a 0%, #000000 100%);
+    overflow: hidden;
+    color: var(--primary);
+    font-family: sans-serif;
+    min-height: 100vh;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* 星星容器 */
+body::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: -1;
+}
+
+/* 星星样式 */
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 2s infinite ease-in-out;
+    opacity: 0.8;
+}
+
+/* 星星闪烁动画 */
+@keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+}
         *, *::before, *::after { box-sizing: inherit; }
 
         body {
@@ -383,6 +412,7 @@
     }
 
     renderGrid();  // Render the sites initially with 'online' as the default category
+<script src="stars.js"></script>
 </script>
 </body>
 </html>
