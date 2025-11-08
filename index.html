@@ -32,33 +32,6 @@ html, body {
     box-sizing: border-box;
     position: relative;
 }
-
-/* 星星容器 */
-body::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    z-index: -1;
-}
-
-/* 星星样式 */
-.star {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background: white;
-    border-radius: 50%;
-    animation: twinkle 2s infinite ease-in-out;
-    opacity: 0.8;
-}
-
-/* 星星闪烁动画 */
-@keyframes twinkle {
-    0%, 100% { opacity: 0.2; }
-    50% { opacity: 1; }
-}
         *, *::before, *::after { box-sizing: inherit; }
 
         body {
@@ -413,6 +386,6 @@ body::before {
     }
 
     renderGrid();  // Render the sites initially with 'online' as the default category
-  <script src="stars.js"></script>
+</script>
 </body>
 </html>
