@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- 网站图标：😈 -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E😈%3C/text%3E%3C/svg%3E">
+
+    <!-- Google Fonts via PoodleDonts proxy (replace fonts.googleapis.com with googledonts.private.coffee) -->
+    <link rel="stylesheet" href="https://googledonts.private.coffee/css2?family=Condiment&family=Zhi+Mang+Xing&display=swap">
+
     <style>
         :root {
             --primary: #fff;
@@ -19,8 +23,14 @@
             /* 页面左右留白 */
             --page-max-width: 1200px;
             --page-padding-x: clamp(16px, 4vw, 40px);
+
+            /* 用于让标题两行在不同客户端始终保持相同宽度 */
+            /* 这个宽度是响应式的：在非常窄屏会收缩，但两个标题始终使用相同的计算宽度 */
+            --title-width: clamp(260px, 56%, 760px);
         }
-        html, body {
+
+        /* 字体：优先用 Condiment 渲染 Latin / 英文字符，回退到 Zhi Mang Xing 渲染中文 */
+        body {
             margin: 0;
             padding: 0;
             /* 夜空底色（画布上会绘制闪烁星空） */
@@ -28,7 +38,10 @@
                         radial-gradient(900px 500px at 90% 80%, rgba(10,8,30,0.55), transparent 20%),
                         linear-gradient(180deg, #020417 0%, #07122b 50%, #081025 100%);
             color: var(--primary);
-            font-family: sans-serif;
+
+            /* 字体栈：Condiment 放在前面以优先用于 Latin（英文），Zhi Mang Xing 放在后以覆盖中文 */
+            font-family: "Condiment", "Zhi Mang Xing", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
             min-height: 100vh;
             box-sizing: border-box;
         }
@@ -67,14 +80,28 @@
             z-index: 1; /* 放在星空画布之上 */
         }
 
-        header {
-            width: 100%;
+        /*
+         Title alignment helper:
+         - 将 "看片儿导航" 和 "甄选国内外优秀影视资源站" 放在相同的 .title-box 中以保持一致宽度和换行
+         - 使用 --title-width（响应式 clamp）保证在不同客户端/屏幕下两者计算宽度一致
+        */
+        .title-box {
+            width: var(--title-width);
+            margin-inline: auto;
             text-align: center;
+            display: block;
+            word-break: keep-all; /* 尽量避免中文被拆分到下一行 */
+        }
+
+        header {
+            /* 不再使用固定 100% 宽度；宽度由 .title-box 控制以保证两段文字一致 */
             font-size: 2.2rem;
             font-weight: 700;
             letter-spacing: 4px;
             margin-top: 44px;
             margin-bottom: 16px;
+            /* 保证中文标题使用更稳妥的渲染（如果需要可单独覆盖） */
+            line-height: 1.05;
         }
         .banner {
             width: 100%;
@@ -198,6 +225,10 @@
             .site-grid {
                 grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             }
+            /* 为便于小屏幕显示，使标题宽度在窄屏能更紧凑 */
+            :root {
+                --title-width: clamp(220px, 80%, 680px);
+            }
         }
         @media screen and (max-width: 600px) {
             /* 在移动端将网站名字体增大 40%（从 1.3rem -> 1.82rem） */
@@ -206,6 +237,9 @@
             .banner h2 { font-size: 1rem; }
             .category-btn { font-size: 0.87rem; padding: 8px 12px; }
             .site-grid { gap: 14.8px 10.4px; } /* 缩小 26%：原 20px 14px -> 14.8, 10.4 */
+            :root {
+                --title-width: clamp(200px, 90%, 520px);
+            }
         }
 
         .notes {
@@ -279,11 +313,13 @@
     <canvas id="starfield" aria-hidden="true"></canvas>
 
     <div class="container">
-        <header>
+        <!-- 应用 .title-box 保证与下方副标题宽度一致 -->
+        <header class="title-box">
             看片儿导航
         </header>
         <div class="banner">
-            <h2>甄选国内外优秀影视资源站</h2>
+            <!-- 同样应用 .title-box 保证宽度与 header 一致 -->
+            <h2 class="title-box">甄选国内外优秀影视资源站</h2>
         </div>
         <div class="category-btns">
             <button class="category-btn" id="btn-pan" onclick="switchCategory('pan')">网盘</button>
@@ -292,7 +328,7 @@
         </div>
         <div class="site-grid" id="siteGrid"></div>
         <div class="notes">
-            注：EE3邀请码：FMHY，访问不畅请布阵施法
+            注：EE3 邀请码：FMHY，访问不畅请布阵施法🪜
         </div>
         <div class="centered-backup-btn">
             <button class="backup-btn-large" onclick="window.open('https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4','_blank')">
@@ -302,7 +338,7 @@
         <footer>
             Made with ❤️
             <a href="https://github.com/kanpianer/pianer" target="_blank">Github</a>
-            <a href="https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/JFwHXrNa5iGJ5wtIZHlPX" target="_blank">高画质Emby</a>            
+            <a href="https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/JFwHXrNa5iGJ5wtIZHlPX" target="_blank">高画质Emby服</a>            
         </footer>
     </div>
 
