@@ -8,7 +8,7 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E😈%3C/text%3E%3C/svg%3E">
 
     <!-- Google Fonts via PoodleDonts proxy (replace fonts.googleapis.com with googledonts.private.coffee) -->
-    <link rel="stylesheet" href="https://googledonts.private.coffee/css2?family=Condiment&family=Zhi+Mang+Xing&display=swap">
+    <link rel="stylesheet" href="https://googledonts.private.coffee/css2?family=Cagliostro&family=Zhi+Mang+Xing&display=swap">
 
     <style>
         :root {
@@ -29,7 +29,7 @@
             --title-width: clamp(260px, 56%, 760px);
         }
 
-        /* 字体：优先用 Condiment 渲染 Latin / 英文字符，回退到 Zhi Mang Xing 渲染中文 */
+        /* 字体：优先用 Cagliostro 渲染 Latin / 英文字符，回退到 Zhi Mang Xing 渲染中文 */
         body {
             margin: 0;
             padding: 0;
@@ -39,8 +39,8 @@
                         linear-gradient(180deg, #020417 0%, #07122b 50%, #081025 100%);
             color: var(--primary);
 
-            /* 字体栈：Condiment 放在前面以优先用于 Latin（英文），Zhi Mang Xing 放在后以覆盖中文 */
-            font-family: "Condiment", "Zhi Mang Xing", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            /* 字体栈：Cagliostro 放在前面以优先用于 Latin（英文），Zhi Mang Xing 放在后以覆盖中文 */
+            font-family: "Cagliostro", "Zhi Mang Xing", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
             min-height: 100vh;
             box-sizing: border-box;
@@ -194,6 +194,10 @@
             transition: color .17s;
             /* 增大20%（原1.08rem -> 1.296rem） */
             font-size: 1.296rem;
+            /* 确保 <a> 也表现得像按钮 */
+            text-decoration: none;
+            display: inline-block;
+            padding: 0;
         }
         .site-name:hover {
             color: var(--accent);
@@ -209,6 +213,9 @@
             outline: none;
             cursor: pointer;
             transition: background 0.2s, color 0.15s, border-color 0.17s;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 6px;
         }
         .backup-link-btn:hover, .backup-none-btn:hover {
             background: var(--accent);
@@ -412,33 +419,41 @@
                 window.open(site.main_url, "_blank");
             };
 
-            const btn = document.createElement('button');
-            btn.className = 'site-name';
-            btn.textContent = site.name;
-            btn.onclick = function(event){
+            // 使用 <a> 代替 button，以便浏览器在悬停时显示原生 status bar
+            const link = document.createElement('a');
+            link.className = 'site-name';
+            link.textContent = site.name;
+            link.href = site.main_url;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            // 阻止冒泡以避免触发 card 的 onclick（但允许默认的导航/新标签打开）
+            link.addEventListener('click', function(event) {
                 event.stopPropagation();
-                window.open(site.main_url,"_blank");
-            };
-            card.appendChild(btn);
+            });
+            card.appendChild(link);
 
             if (site.backup_url && site.backup_url.trim().length > 0) {
-                const backupBtn = document.createElement('button');
-                backupBtn.className = "backup-link-btn";
-                backupBtn.textContent = "备份网址";
-                backupBtn.onclick = (event) => {
+                const backupLink = document.createElement('a');
+                backupLink.className = "backup-link-btn";
+                backupLink.textContent = "备份网址";
+                backupLink.href = site.backup_url;
+                backupLink.target = '_blank';
+                backupLink.rel = 'noopener noreferrer';
+                backupLink.addEventListener('click', (event) => {
                     event.stopPropagation();
-                    window.open(site.backup_url,"_blank");
-                };
-                card.appendChild(backupBtn);
+                });
+                card.appendChild(backupLink);
             } else {
-                const backupNoneBtn = document.createElement('button');
-                backupNoneBtn.className = "backup-none-btn";
-                backupNoneBtn.textContent = "没有备份";
-                backupNoneBtn.onclick = (event) => {
+                const backupNoneLink = document.createElement('a');
+                backupNoneLink.className = "backup-none-btn";
+                backupNoneLink.textContent = "没有备份";
+                backupNoneLink.href = "https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4";
+                backupNoneLink.target = '_blank';
+                backupNoneLink.rel = 'noopener noreferrer';
+                backupNoneLink.addEventListener('click', (event) => {
                     event.stopPropagation();
-                    window.open("https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4","_blank");
-                };
-                card.appendChild(backupNoneBtn);
+                });
+                card.appendChild(backupNoneLink);
             }
 
             grid.appendChild(card);
