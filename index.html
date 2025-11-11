@@ -405,9 +405,10 @@
             <div class="site-grid" id="siteGrid"></div>
 
             <!-- 高清Emby服 的圆角方框（初始隐藏） -->
+            <!-- 为了可访问性与滚动控制，给 .card 一个 id 并允许 programmatic focus -->
             <div id="embyBox" class="emby-box" aria-hidden="true">
-                <div class="card" role="region" aria-label="高清Emby服说明">
-                    <h2>高清Emby服</h2>
+                <div id="embyCard" class="card" role="region" aria-label="高清Emby服说明" tabindex="-1">
+                    <h3>高清Emby服</h3>
                     <p>如果你厌倦了视频网站多元的广告和模糊不清的画质，Emby服会是不错的选择。<br>
                     Emby服可大致分为以下两类：</p>
                     <ul>
@@ -571,6 +572,7 @@
     function showEmby() {
         const grid = document.getElementById('siteGrid');
         const embyBox = document.getElementById('embyBox');
+        const embyCard = document.getElementById('embyCard');
 
         // 快速淡出当前分类下的所有网站卡片（仅视觉上淡出，不改变布局）
         grid.classList.add('faded');
@@ -579,6 +581,31 @@
         embyBox.classList.add('show');
         embyBox.setAttribute('aria-hidden', 'false');
 
+        // Accessibility: make sure the emby card can receive programmatic focus
+        if (embyCard) {
+            // on mobile (或窄屏) 自动滚动到 embyCard 的顶部，方便从段落开头阅读
+            const isMobile = window.matchMedia && window.matchMedia('(max-width: 900px)').matches;
+
+            // 等待浏览器完成布局后再滚动/focus
+            setTimeout(() => {
+                try {
+                    if (isMobile) {
+                        const rect = embyCard.getBoundingClientRect();
+                        const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+                        // 目标 scrollTop：card 顶部对视口的位置减去一点 padding（12px）
+                        const targetTop = Math.max(0, Math.floor(scrollY + rect.top - 12));
+                        window.scrollTo({ top: targetTop, behavior: 'smooth' });
+                    }
+                    // 将焦点移到 embyCard 上，便于屏幕阅读器和键盘用户（preventScroll:true 避免再次跳动）
+                    embyCard.setAttribute('tabindex', '-1');
+                    embyCard.focus && embyCard.focus({ preventScroll: true });
+                } catch (e) {
+                    // 在极少数浏览器上 focus({preventScroll:true}) 可能抛出，安全降级为 focus()
+                    try { embyCard.focus && embyCard.focus(); } catch (err) {}
+                }
+            }, 60);
+        }
+
         embyActive = true;
     }
 
@@ -586,6 +613,7 @@
     function hideEmby(hideWithAnimation = true) {
         const grid = document.getElementById('siteGrid');
         const embyBox = document.getElementById('embyBox');
+        const embyCard = document.getElementById('embyCard');
 
         // 隐藏 emby 说明框
         embyBox.classList.remove('show');
@@ -600,6 +628,19 @@
         } else {
             // 立刻恢复（无动画）
             grid.classList.remove('faded');
+        }
+
+        // 将焦点回送到触发按钮，提升无障碍体验
+        try {
+            const embyBtn = document.getElementById('embyBtn');
+            if (embyBtn) embyBtn.focus({ preventScroll: true });
+        } catch (e) {
+            try { document.getElementById('embyBtn') && document.getElementById('embyBtn').focus(); } catch(err){}
+        }
+
+        // 可选：移除 tabindex 保持 DOM 简洁（留着也没问题）
+        if (embyCard) {
+            // don't remove tabindex immediately to avoid screen-reader jump; leave it as -1
         }
 
         embyActive = false;
