@@ -155,6 +155,15 @@
             outline: 2px solid var(--fixed);
         }
 
+        /* 包裹 site-grid 与 emby-box，使 emby-box 可以覆盖在相同区域 */
+        .grid-wrapper {
+            width: 100%;
+            position: relative;
+            margin-bottom: 8px;
+            min-height: 150px; /* 保持与 .site-grid 原始最小高度一致，避免高度塌陷 */
+            display: block;
+        }
+
         /* 站点网格：使用 CSS Grid 自适应列 */
         .site-grid {
             width: 100%;
@@ -163,8 +172,18 @@
             gap: 22.2px 14.8px; /* 缩小 26%：原 gap: 30px 20px -> 30*0.74=22.2, 20*0.74=14.8 */
             justify-items: center;  /* Ensures site cards are centered horizontally */
             align-items: start;     /* Align cards at the top of their grid cell */
-            margin-bottom: 8px;
+            margin-bottom: 0;
             min-height: 150px;
+            transition: opacity 220ms ease, transform 220ms ease;
+            /* 保持在堆栈底层，emby-box 会覆盖在上面 */
+            position: relative;
+            z-index: 1;
+        }
+
+        /* faded 状态：快速淡出（不影响布局占用） */
+        .site-grid.faded {
+            opacity: 0;
+            pointer-events: none;
         }
 
         .site-card {
@@ -232,6 +251,46 @@
             color: #b6b2b2;
             border-color: var(--outline);
         }
+
+        /* emby-box：覆盖在 site-grid 区域之上，圆角方框，自适应排版 */
+        .emby-box {
+            position: absolute;
+            inset: 0;
+            display: none; /* 初始隐藏 */
+            z-index: 2;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            box-sizing: border-box;
+        }
+        .emby-box .card {
+            width: 100%;
+            max-width: 980px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border-radius: 16px;
+            border: 1px solid rgba(255,86,48,0.08);
+            padding: clamp(14px, 2.2vw, 28px);
+            color: #f6f4f6;
+            box-shadow: 0 6px 22px rgba(6,8,15,0.45);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            text-align: left;
+            font-size: clamp(0.95rem, 1.5vw, 1.06rem);
+            line-height: 1.55;
+        }
+        .emby-box h3 {
+            margin: 0;
+            font-size: clamp(1.05rem, 2.4vw, 1.28rem);
+            color: var(--accent);
+            letter-spacing: 0.6px;
+        }
+        .emby-box p { margin: 0; color: #d7d4d8; }
+        .emby-box ul { margin: 0 0 0 1.2em; color: #d0cdd1; }
+        .emby-box small { color: #bcb8c0; }
+
+        /* 使 emby-box 在显示时居中呈现 */
+        .emby-box.show { display: flex; }
 
         @media screen and (max-width: 900px) {
             .site-grid {
@@ -340,14 +399,38 @@
             <button class="category-btn active" id="btn-online" onclick="switchCategory('online')">在线</button>
             <button class="category-btn" id="btn-bt" onclick="switchCategory('bt')">BT</button>
         </div>
-        <div class="site-grid" id="siteGrid"></div>
+
+        <!-- 包裹 site-grid 与 emby-box -->
+        <div class="grid-wrapper">
+            <div class="site-grid" id="siteGrid"></div>
+
+            <!-- 高清Emby服 的圆角方框（初始隐藏） -->
+            <div id="embyBox" class="emby-box" aria-hidden="true">
+                <div class="card" role="region" aria-label="高清Emby服说明">
+                    <h3>高清Emby服</h3>
+                    <p>如果你厌倦了视频网站多元的广告和模糊不清的画质，Emby服会是不错的选择。<br>
+                    Emby服可大致分为以下两类：</p>
+                    <ul>
+                        <li>公益服：无需付费，但可能有一定入服门槛</li><a href="https://intro.bgp.yt/">二次元Emby</a>、<a href="https://t.me/embyxk">公益服星空指南</a>、<a href="https://t.me/FreeEmbyGuide">公益不完全指北</a>
+                        <li>付费服：需要付费，但服务会相对比较稳定</li><a href="https://plan.emby.moe/">1111Emby</a>、<a href="https://micu.hk/archives/emby-users">MICU</a>、<a  href="https://t.me/Emby_Navigation">付费Emby导航</a>
+                    </ul>
+                    <p>注意事项：
+                    <ul>
+                        <li>文中提到的Emby服仅作为示例展示，不是广告，跑路算你倒霉</li>
+                        <li>购买前确保你可以访问相关Emby服线路，或咨询服主线路是否可以直连</li>
+                        <li>详细教程请访问：<a href="https://emby.wiki/zh/home">https://emby.wiki</a></li>
+</p>
+                    <ul>
+                </div>
+            </div>
+        </div>
+
         <div class="notes">
             注：EE3 邀请码：FMHY，访问不畅请布阵施法🪜
         </div>
         <div class="centered-backup-btn">
-            <button class="backup-btn-large" onclick="window.open('https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4','_blank')">
-                网站备份
-            </button>
+            <!-- 按钮不再直接打开外部链接；改为 “高清Emby服” 并由 JS 控制显示/隐藏 -->
+            <button id="embyBtn" class="backup-btn-large" onclick="toggleEmby()">高清Emby服</button>
         </div>
         <footer>
             Made with ❤️
@@ -397,12 +480,19 @@
     ];
 
     let currentCategory = 'online';  // Default to 'online'
+    let embyActive = false; // 标记 Emby 展示状态
 
     function switchCategory(category) {
         currentCategory = category;
         ['online','pan','bt'].forEach(c => {
             document.getElementById(`btn-${c}`).classList.toggle('active', c === category);
         });
+
+        // 切换分类时强制关闭 emby 显示（符合需求：切换分类会显示对应网站卡片）
+        if (embyActive) {
+            hideEmby(false); // 隐藏 emby，但不要做额外动画 — 只恢复列表
+        }
+
         renderGrid();
     }
 
@@ -468,6 +558,60 @@
     }
 
     renderGrid();  // Render the sites initially with 'online' as the default category
+
+    // Emby 控制函数：切换显示 / 隐藏 embyBox，并对 site-grid 执行快速淡出/恢复
+    function toggleEmby() {
+        if (!embyActive) {
+            showEmby();
+        } else {
+            hideEmby(true);
+        }
+    }
+
+    function showEmby() {
+        const grid = document.getElementById('siteGrid');
+        const embyBox = document.getElementById('embyBox');
+
+        // 快速淡出当前分类下的所有网站卡片（仅视觉上淡出，不改变布局）
+        grid.classList.add('faded');
+
+        // 显示 emby 说明框
+        embyBox.classList.add('show');
+        embyBox.setAttribute('aria-hidden', 'false');
+
+        embyActive = true;
+    }
+
+    // hideWithAnimation 参数：为 true 时把 siteGrid 恢复带动画；为 false 时直接移除（用于分类切换时立即恢复）
+    function hideEmby(hideWithAnimation = true) {
+        const grid = document.getElementById('siteGrid');
+        const embyBox = document.getElementById('embyBox');
+
+        // 隐藏 emby 说明框
+        embyBox.classList.remove('show');
+        embyBox.setAttribute('aria-hidden', 'true');
+
+        // 恢复网站卡片可见性
+        if (hideWithAnimation) {
+            // 反向动画：先移除 faded class（CSS transition 会处理淡入）
+            requestAnimationFrame(() => {
+                grid.classList.remove('faded');
+            });
+        } else {
+            // 立刻恢复（无动画）
+            grid.classList.remove('faded');
+        }
+
+        embyActive = false;
+    }
+
+    // 额外保证：如果页面加载时 embyActive 受用户设备或其他交互影响，保证开关正常
+    document.getElementById('embyBtn').addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleEmby();
+        }
+    });
 </script>
 
 <script>
