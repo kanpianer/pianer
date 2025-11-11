@@ -140,6 +140,9 @@
             font-weight: 600;
             transition: background 0.18s, color 0.18s, transform 0.14s;
             outline: 2px solid transparent;
+            /* 确保分类按钮使用 PoodleDonts 代理加载的 Google Fonts，
+               同样遵循：英文用 Cagliostro，中文用 Zhi Mang Xing */
+            font-family: "Cagliostro", "Zhi Mang Xing", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
         .category-btn:hover {
             background: var(--button-hover);
@@ -216,6 +219,8 @@
             text-decoration: none;
             display: inline-block;
             margin-top: 6px;
+            /* 让这些备份按钮也使用同样的字体栈，保证中文/英文渲染一致 */
+            font-family: "Cagliostro", "Zhi Mang Xing", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
         .backup-link-btn:hover, .backup-none-btn:hover {
             background: var(--accent);
@@ -278,6 +283,8 @@
             outline: none;
             cursor: pointer;
             transition: background 0.18s, color 0.18s;
+            /* 同样应用字体栈到大备份按钮，保持一致性 */
+            font-family: "Cagliostro", "Zhi Mang Xing", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
 
         .backup-btn-large:hover {
