@@ -294,6 +294,11 @@
             width: 100%;
             text-align: center;
             margin: 12px 0;
+            /* 改为 flex 居中排列两个按钮并保持间距 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
         }
 
         .backup-btn-large {
@@ -362,19 +367,14 @@
             <div class="site-grid" id="siteGrid"></div>
 
             <div id="embyBox" class="emby-box" aria-hidden="true">
-                <div id="embyCard" class="card" role="region" aria-label="高清Emby服说明" tabindex="-1">
-                    <h3>高清Emby服</h3>
+                <!-- 单一浮层容器（内容会由 JS 填充），初始内容为Emby服说明，便于直接在 HTML 编辑 -->
+                <div id="embyCard" class="card" role="region" aria-label="浮层说明" tabindex="-1">
+                    <h3>Emby服</h3>
                     <p>如果你厌倦了视频网站多元的广告和模糊不清的画质，Emby服会是不错的选择。<br>
                     Emby服可大致分为以下两类：</p>
                     <ul>
-                        <li>公益服：无需付费，但可能有一定入服门槛</li><a href="https://intro.bgp.yt/" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer"
->二次元Emby</a>、<a href="https://t.me/embyxk" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer"
->公益服星空指南</a>、<a href="https://t.me/FreeEmbyGuide" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer"
->公益不完全指北</a>
-                        <li>付费服：需要付费，但服务会相对比较稳定</li><a href="https://plan.emby.moe/" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer"
->1111Emby</a>、<a href="https://micu.hk/archives/emby-users" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer"
->MICU</a>、<a  href="https://t.me/Emby_Navigation" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer"
->付费Emby导航</a>
+                        <li>公益服：无需付费，但可能有一定入服门槛</li><a href="https://intro.bgp.yt/" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">二次元Emby</a>、<a href="https://t.me/embyxk" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">公益服星空指南</a>、<a href="https://t.me/FreeEmbyGuide" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">公益不完全指北</a>
+                        <li>付费服：需要付费，但服务会相对比较稳定</li><a href="https://plan.emby.moe/" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">1111Emby</a>、<a href="https://micu.hk/archives/emby-users" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">MICU</a>、<a  href="https://t.me/Emby_Navigation" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">付费Emby导航</a>
                     </ul>
                     <p>注意事项：</p>
                     <ul>
@@ -384,13 +384,29 @@
                     </ul>
                 </div>
             </div>
+
+            <!-- 模板：OK影视的说明放在 HTML 模板里，方便日后直接在文件中编辑 -->
+            <template id="okTemplate">
+                <h3>OK影视</h3>
+                <p>
+                    OK影视使用起来和Emby差不多，填写好配置接口的地址就可以了。<br>
+
+                    详细教程和相关资源可访问以下链接：<br>
+                <ul>
+                    <li><a href="https://blog.ccino.org/p/tvbox-tv-version-installation-and-configuration-complete-guide/" target="_blank" rel="noopener noreferrer" style="color: #9e9eff;"> TVBox电视版安装配置全指南（2025最新版）</a></li>
+                    <li><a href="https://t.me/tvb_ys" target="_blank" rel="noopener noreferrer" style="color: #9e9eff;">TVB/影視(OK) 电报频道</li>
+                    <li><a href="https://github.com/qist/tvbox" target="_blank" rel="noopener noreferrer" style="color: #9e9eff;">OK影视各种客户端和配置链接（文件）</a></li>
+                    <li><a href="https://www.饭太硬.com" target="_blank" rel="noopener noreferrer" style="color: #9e9eff;">饭太硬配置接口导航</a></li>
+                </ul>
+            </template>
         </div>
 
         <div class="notes">
-            注：EE3 邀请码：FMHY，访问不畅请布阵施法🪜
+            注：EE3 邀请码：FMHY。访问不畅请自行施法🪜
         </div>
         <div class="centered-backup-btn">
-            <button id="embyBtn" class="backup-btn-large" onclick="toggleEmby()">高清Emby服</button>
+            <button id="embyBtn" class="backup-btn-large" data-type="emby" onclick="toggleInfo('emby')">Emby服</button>
+            <button id="okBtn" class="backup-btn-large" data-type="ok" onclick="toggleInfo('ok')">OK影视</button>
         </div>
         <footer>
             Made with ❤️
@@ -439,15 +455,18 @@
     ];
 
     let currentCategory = 'online';
-    let embyActive = false;
+    // infoActive 表示是否正在展示浮层，currentInfoType 保存当前展示的类型： 'emby' 或 'ok'
+    let infoActive = false;
+    let currentInfoType = null;
 
     function switchCategory(category) {
         currentCategory = category;
         ['online','pan','bt'].forEach(c => {
-            document.getElementById(`btn-${c}`).classList.toggle('active', c === category);
+            const el = document.getElementById(`btn-${c}`);
+            if (el) el.classList.toggle('active', c === category);
         });
-        if (embyActive) {
-            hideEmby(false);
+        if (infoActive) {
+            hideInfo(false);
         }
         renderGrid();
     }
@@ -505,45 +524,64 @@
 
     renderGrid();
 
-    function toggleEmby() {
-        if (!embyActive) {
-            showEmby();
+    // 保存原始 embyCard 的 HTML（便于恢复）
+    const embyCardEl = document.getElementById('embyCard');
+    const originalEmbyHTML = embyCardEl ? embyCardEl.innerHTML : '';
+
+    function toggleInfo(type) {
+        if (!infoActive || currentInfoType !== type) {
+            showInfo(type);
         } else {
-            hideEmby(true);
+            hideInfo(true);
         }
     }
 
-    function showEmby() {
+    function showInfo(type) {
         const grid = document.getElementById('siteGrid');
         const embyBox = document.getElementById('embyBox');
-        const embyCard = document.getElementById('embyCard');
-        grid.classList.add('faded');
+        const embyCardEl = document.getElementById('embyCard');
+        if (!embyBox || !embyCardEl) return;
+        // 根据类型填充对应 HTML 模板（模板保存在 HTML 中，方便直接编辑）
+        if (type === 'emby') {
+            embyCardEl.innerHTML = originalEmbyHTML;
+            embyCardEl.setAttribute('aria-label', 'Emby服说明');
+        } else if (type === 'ok') {
+            const tpl = document.getElementById('okTemplate');
+            if (tpl) {
+                embyCardEl.innerHTML = tpl.innerHTML;
+                embyCardEl.setAttribute('aria-label', 'OK影视说明');
+            } else {
+                embyCardEl.innerHTML = '<h3>OK影视</h3><p>OK影视说明文字</p>';
+            }
+        }
         embyBox.classList.add('show');
         embyBox.setAttribute('aria-hidden', 'false');
-        if (embyCard) {
-            const isMobile = window.matchMedia && window.matchMedia('(max-width: 900px)').matches;
-            setTimeout(() => {
-                try {
-                    if (isMobile) {
-                        const rect = embyCard.getBoundingClientRect();
-                        const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-                        const targetTop = Math.max(0, Math.floor(scrollY + rect.top - 12));
-                        window.scrollTo({ top: targetTop, behavior: 'smooth' });
-                    }
-                    embyCard.setAttribute('tabindex', '-1');
-                    embyCard.focus && embyCard.focus({ preventScroll: true });
-                } catch (e) {
-                    try { embyCard.focus && embyCard.focus(); } catch (err) {}
+        grid.classList.add('faded');
+
+        const isMobile = window.matchMedia && window.matchMedia('(max-width: 900px)').matches;
+        setTimeout(() => {
+            try {
+                if (isMobile) {
+                    const rect = embyCardEl.getBoundingClientRect();
+                    const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+                    const targetTop = Math.max(0, Math.floor(scrollY + rect.top - 12));
+                    window.scrollTo({ top: targetTop, behavior: 'smooth' });
                 }
-            }, 60);
-        }
-        embyActive = true;
+                embyCardEl.setAttribute('tabindex', '-1');
+                embyCardEl.focus && embyCardEl.focus({ preventScroll: true });
+            } catch (e) {
+                try { embyCardEl.focus && embyCardEl.focus(); } catch (err) {}
+            }
+        }, 60);
+        infoActive = true;
+        currentInfoType = type;
     }
 
-    function hideEmby(hideWithAnimation = true) {
+    function hideInfo(hideWithAnimation = true) {
         const grid = document.getElementById('siteGrid');
         const embyBox = document.getElementById('embyBox');
-        const embyCard = document.getElementById('embyCard');
+        const embyCardEl = document.getElementById('embyCard');
+        if (!embyBox || !embyCardEl) return;
         embyBox.classList.remove('show');
         embyBox.setAttribute('aria-hidden', 'true');
         if (hideWithAnimation) {
@@ -555,19 +593,36 @@
         }
         try {
             const embyBtn = document.getElementById('embyBtn');
-            if (embyBtn) embyBtn.focus({ preventScroll: true });
+            const okBtn = document.getElementById('okBtn');
+            // 将焦点返回到最后点击的按钮（优先返回 okBtn，如果当前类型为 emby 则返回 embyBtn）
+            if (currentInfoType === 'ok' && okBtn) okBtn.focus({ preventScroll: true });
+            else if (embyBtn) embyBtn.focus({ preventScroll: true });
         } catch (e) {
             try { document.getElementById('embyBtn') && document.getElementById('embyBtn').focus(); } catch(err){}
         }
-        embyActive = false;
+        infoActive = false;
+        currentInfoType = null;
     }
 
-    document.getElementById('embyBtn').addEventListener('keydown', function(e){
-        if(e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            toggleEmby();
-        }
-    });
+    // 键盘支持：Enter / Space
+    const embyBtnEl = document.getElementById('embyBtn');
+    const okBtnEl = document.getElementById('okBtn');
+    if (embyBtnEl) {
+        embyBtnEl.addEventListener('keydown', function(e){
+            if(e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleInfo('emby');
+            }
+        });
+    }
+    if (okBtnEl) {
+        okBtnEl.addEventListener('keydown', function(e){
+            if(e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleInfo('ok');
+            }
+        });
+    }
 </script>
 
 <script>
