@@ -8,7 +8,7 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E😈%3C/text%3E%3C/svg%3E">
 
     <!-- Google Fonts via PoodleDonts proxy (replace fonts.googleapis.com with googledonts.private.coffee) -->
-    <link rel="stylesheet" href="https://googledonts.private.coffee/css2?family=Cagliostro&family=Ma+Shan+Zheng&display=swap">
+    <link rel="stylesheet" href="https://googledonts.private.coffee/css2?family=Ma+Shan+Zheng&family=Cagliostro&family=Zhi+Mang+Xing&display=swap">
 
     <style>
         :root {
@@ -29,7 +29,14 @@
             --title-width: clamp(260px, 56%, 760px);
         }
 
-        /* 字体：优先用 Cagliostro 渲染 Latin / 英文字符，回退到 Ma+Shan+Zheng 渲染中文 */
+        /* 专门为需要使用 Ma Shan Zheng 的局部元素定义的类（但保证英文/Latin 始终由 Cagliostro 渲染） */
+        /* 将 Cagliostro 放在最前以确保所有英文字母优先使用 Cagliostro 渲染，
+           同时把 Ma Shan Zheng 放在后面以用于中文字符回退。 */
+        .msz {
+            font-family: "Cagliostro", "Ma Shan Zheng", "Zhi Mang Xing", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        /* 字体：优先用 Cagliostro 渲染 Latin / 英文字符，回退到 Zhi Mang Xing 渲染中文 */
         body {
             margin: 0;
             padding: 0;
@@ -39,8 +46,8 @@
                         linear-gradient(180deg, #020417 0%, #07122b 50%, #081025 100%);
             color: var(--primary);
 
-            /* 字体栈：Cagliostro 放在前面以优先用于 Latin（英文），Ma+Shan+Zheng 放在后以覆盖中文 */
-            font-family: "Cagliostro", "Ma Shan Zheng", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            /* 字体栈：Cagliostro 放在前面以优先用于 Latin（英文），Zhi Mang Xing 放在后以覆盖中文 */
+            font-family: "Cagliostro", "Zhi Mang Xing", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
             min-height: 100vh;
             box-sizing: border-box;
@@ -392,7 +399,8 @@
         </header>
         <div class="banner">
             <!-- 同样应用 .title-box 保证宽度与 header 一致 -->
-            <h2 class="title-box">甄选国内外优秀影视资源站</h2>
+            <!-- 将副标题使用 Ma Shan Zheng 字体（只影响此元素），但保证英文字母由 Cagliostro 渲染 -->
+            <h2 class="title-box msz">甄选国内外优秀影视资源站</h2>
         </div>
         <div class="category-btns">
             <button class="category-btn" id="btn-pan" onclick="switchCategory('pan')">网盘</button>
@@ -406,8 +414,9 @@
 
             <!-- 高清Emby服 的圆角方框（初始隐藏） -->
             <!-- 为了可访问性与滚动控制，给 .card 一个 id 并允许 programmatic focus -->
+            <!-- 将 embyCard 的说明内容设置为 Ma Shan Zheng（只影响 embyCard 内部中文），但英文仍由 Cagliostro 渲染 -->
             <div id="embyBox" class="emby-box" aria-hidden="true">
-                <div id="embyCard" class="card" role="region" aria-label="高清Emby服说明" tabindex="-1">
+                <div id="embyCard" class="card msz" role="region" aria-label="高清Emby服说明" tabindex="-1">
                     <h3>高清Emby服</h3>
                     <p>如果你厌倦了视频网站多元的广告和模糊不清的画质，Emby服会是不错的选择。<br>
                     Emby服可大致分为以下两类：</p>
@@ -432,12 +441,14 @@
             </div>
         </div>
 
-        <div class="notes">
+        <!-- 将注释文字设置为 Ma Shan Zheng（只影响此 .notes 元素），但英文字母仍由 Cagliostro 渲染 -->
+        <div class="notes msz">
             注：EE3 邀请码：FMHY，访问不畅请布阵施法🪜
         </div>
         <div class="centered-backup-btn">
             <!-- 按钮不再直接打开外部链接；改为 “高清Emby服” 并由 JS 控制显示/隐藏 -->
-            <button id="embyBtn" class="backup-btn-large" onclick="toggleEmby()">高清Emby服</button>
+            <!-- 将按钮文字设置为 Ma Shan Zheng（只影响此按钮的中文），但英文字母仍由 Cagliostro 渲染 -->
+            <button id="embyBtn" class="backup-btn-large msz" onclick="toggleEmby()">高清Emby服</button>
         </div>
         <footer>
             Made with ❤️
