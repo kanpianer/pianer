@@ -36,6 +36,11 @@
         }
         *, *::before, *::after { box-sizing: inherit; }
 
+        /* Ensure all interactive labels and site text use LXGW WenKai TC */
+        .category-btn, .backup-btn-large, .site-name, .backup-link-btn, .backup-none-btn, .emby-box .card, .site-card, .notes, footer, .category-btns {
+            font-family: "LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
         #starfield {
             position: fixed;
             inset: 0;
@@ -224,15 +229,16 @@
             padding: 18px;
             box-sizing: border-box;
         }
+        /* 去除外部圆角外框：设置背景、边框和阴影为空/无圆角，保留文字样式与内边距 */
         .emby-box .card {
             width: 100%;
             max-width: 980px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-            border-radius: 16px;
-            border: 1px solid rgba(255,86,48,0.08);
+            background: transparent;
+            border-radius: 0;
+            border: none;
             padding: clamp(14px, 2.2vw, 28px);
             color: #f6f4f6;
-            box-shadow: 0 6px 22px rgba(6,8,15,0.45);
+            box-shadow: none;
             display: flex;
             flex-direction: column;
             gap: 10px;
