@@ -4,64 +4,38 @@
     <meta charset="UTF-8">
     <title>看片儿导航</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 网站图标：😈 -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E😈%3C/text%3E%3C/svg%3E">
-
-    <!-- Google Fonts via PoodleDonts proxy (replace fonts.googleapis.com with googledonts.private.coffee) -->
-    <link rel="stylesheet" href="https://googledonts.private.coffee/css2?family=Ma+Shan+Zheng&family=Cagliostro&family=Zhi+Mang+Xing&display=swap">
-
+    <link rel="stylesheet" href="https://googledonts.private.coffee/css2?family=LXGW+WenKai+TC&display=swap">
     <style>
         :root {
             --primary: #fff;
-            --background: #0b1220; /* darker night background base */
+            --background: #0b1220;
             --accent: #ff5630;
-            --muted: rgba(52, 54, 70, 0.5); /* Updated to semi-transparent */
+            --muted: rgba(52, 54, 70, 0.5);
             --button-hover: #353949;
             --outline: #ff56309c;
             --fixed: #ff5630;
-
-            /* 页面左右留白 */
             --page-max-width: 1200px;
             --page-padding-x: clamp(16px, 4vw, 40px);
-
-            /* 用于让标题两行在不同客户端始终保持相同宽度 */
-            /* 这个宽度是响应式的：在非常窄屏会收缩，但两个标题始终使用相同的计算宽度 */
             --title-width: clamp(260px, 56%, 760px);
         }
 
-        /* 专门为需要使用 Ma Shan Zheng 的局部元素定义的类（但保证英文/Latin 始终由 Cagliostro 渲染） */
-        /* 将 Cagliostro 放在最前以确保所有英文字母优先使用 Cagliostro 渲染，
-           同时把 Ma Shan Zheng 放在后面以用于中文字符回退。 */
-        .msz {
-            font-family: "Cagliostro", "Ma Shan Zheng", "Zhi Mang Xing", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
-
-        /* 字体：优先用 Cagliostro 渲染 Latin / 英文字符，回退到 Zhi Mang Xing 渲染中文 */
         body {
             margin: 0;
             padding: 0;
-            /* 夜空底色（画布上会绘制闪烁星空） */
             background: radial-gradient(1200px 600px at 10% 20%, rgba(20,24,48,0.55), transparent 20%),
                         radial-gradient(900px 500px at 90% 80%, rgba(10,8,30,0.55), transparent 20%),
                         linear-gradient(180deg, #020417 0%, #07122b 50%, #081025 100%);
             color: var(--primary);
-
-            /* 字体栈：Cagliostro 放在前面以优先用于 Latin（英文），Zhi Mang Xing 放在后以覆盖中文 */
-            font-family: "Cagliostro", "Zhi Mang Xing", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-
+            font-family: "LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             min-height: 100vh;
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
         }
         *, *::before, *::after { box-sizing: inherit; }
 
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* 星星画布：覆盖整个视窗并在内容后面（pointer-events:none 保证不阻塞交互） */
         #starfield {
             position: fixed;
             inset: 0;
@@ -72,7 +46,6 @@
             pointer-events: none;
         }
 
-        /* 容器：控制两侧留白与最大宽度 */
         .container {
             flex: 1;
             display: flex;
@@ -82,32 +55,25 @@
             margin-inline: auto;
             padding-left: var(--page-padding-x);
             padding-right: var(--page-padding-x);
-            align-items: center;  /* Centers all content inside */
+            align-items: center;
             position: relative;
-            z-index: 1; /* 放在星空画布之上 */
+            z-index: 1;
         }
 
-        /*
-         Title alignment helper:
-         - 将 "看片儿导航" 和 "甄选国内外优秀影视资源站" 放在相同的 .title-box 中以保持一致宽度和换行
-         - 使用 --title-width（响应式 clamp）保证在不同客户端/屏幕下两者计算宽度一致
-        */
         .title-box {
             width: var(--title-width);
             margin-inline: auto;
             text-align: center;
             display: block;
-            word-break: keep-all; /* 尽量避免中文被拆分到下一行 */
+            word-break: keep-all;
         }
 
         header {
-            /* 不再使用固定 100% 宽度；宽度由 .title-box 控制以保证两段文字一致 */
             font-size: 2.2rem;
             font-weight: 700;
             letter-spacing: 4px;
             margin-top: 44px;
             margin-bottom: 16px;
-            /* 保证中文标题使用更稳妥的渲染（如果需要可单独覆盖） */
             line-height: 1.05;
         }
         .banner {
@@ -147,9 +113,6 @@
             font-weight: 600;
             transition: background 0.18s, color 0.18s, transform 0.14s;
             outline: 2px solid transparent;
-            /* 确保分类按钮使用 PoodleDonts 代理加载的 Google Fonts，
-               同样遵循：英文用 Cagliostro，中文用 Zhi Mang Xing */
-            font-family: "Cagliostro", "Zhi Mang Xing", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
         .category-btn:hover {
             background: var(--button-hover);
@@ -157,37 +120,33 @@
             transform: translateY(-2px) scale(1.03);
         }
         .category-btn.active {
-            background: rgba(255, 86, 48, 0.5); /* Semi-transparent background */
+            background: rgba(255, 86, 48, 0.5);
             color: var(--background);
             outline: 2px solid var(--fixed);
         }
 
-        /* 包裹 site-grid 与 emby-box，使 emby-box 可以覆盖在相同区域 */
         .grid-wrapper {
             width: 100%;
             position: relative;
             margin-bottom: 8px;
-            min-height: 150px; /* 保持与 .site-grid 原始最小高度一致，避免高度塌陷 */
+            min-height: 150px;
             display: block;
         }
 
-        /* 站点网格：使用 CSS Grid 自适应列 */
         .site-grid {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));  /* Flexible columns */
-            gap: 22.2px 14.8px; /* 缩小 26%：原 gap: 30px 20px -> 30*0.74=22.2, 20*0.74=14.8 */
-            justify-items: center;  /* Ensures site cards are centered horizontally */
-            align-items: start;     /* Align cards at the top of their grid cell */
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 22.2px 14.8px;
+            justify-items: center;
+            align-items: start;
             margin-bottom: 0;
             min-height: 150px;
             transition: opacity 220ms ease, transform 220ms ease;
-            /* 保持在堆栈底层，emby-box 会覆盖在上面 */
             position: relative;
             z-index: 1;
         }
 
-        /* faded 状态：快速淡出（不影响布局占用） */
         .site-grid.faded {
             opacity: 0;
             pointer-events: none;
@@ -197,8 +156,8 @@
             background: var(--muted);
             border-radius: 17px;
             box-shadow: 0 2px 8px rgba(20,24,32, 0.09);
-            padding: 18.7px 23.8px;  /* 15% smaller padding */
-            width: 85%;  /* 15% smaller width */
+            padding: 18.7px 23.8px;
+            width: 85%;
             min-height: 80px;
             display: flex;
             flex-direction: column;
@@ -221,9 +180,7 @@
             color: inherit;
             cursor: pointer;
             transition: color .17s;
-            /* 增大20%（原1.08rem -> 1.296rem） */
             font-size: 1.296rem;
-            /* 确保 <a> 也表现得像按钮 */
             text-decoration: none;
             display: inline-block;
             padding: 0;
@@ -245,8 +202,6 @@
             text-decoration: none;
             display: inline-block;
             margin-top: 6px;
-            /* 让这些备份按钮也使用同样的字体栈，保证中文/英文渲染一致 */
-            font-family: "Cagliostro", "Zhi Mang Xing", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
         .backup-link-btn:hover, .backup-none-btn:hover {
             background: var(--accent);
@@ -259,11 +214,10 @@
             border-color: var(--outline);
         }
 
-        /* emby-box：覆盖在 site-grid 区域之上，圆角方框，自适应排版 */
         .emby-box {
             position: absolute;
             inset: 0;
-            display: none; /* 初始隐藏 */
+            display: none;
             z-index: 2;
             align-items: center;
             justify-content: center;
@@ -296,25 +250,22 @@
         .emby-box ul { margin: 0 0 0 1.2em; color: #d0cdd1; }
         .emby-box small { color: #bcb8c0; }
 
-        /* 使 emby-box 在显示时居中呈现 */
         .emby-box.show { display: flex; }
 
         @media screen and (max-width: 900px) {
             .site-grid {
                 grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             }
-            /* 为便于小屏幕显示，使标题宽度在窄屏能更紧凑 */
             :root {
                 --title-width: clamp(220px, 80%, 680px);
             }
         }
         @media screen and (max-width: 600px) {
-            /* 在移动端将网站名字体增大 40%（从 1.3rem -> 1.82rem） */
             header { font-size: 1.82rem; letter-spacing: 2px; }
             .site-card { padding: 16px 14px; }
             .banner h2 { font-size: 1rem; }
             .category-btn { font-size: 0.87rem; padding: 8px 12px; }
-            .site-grid { gap: 14.8px 10.4px; } /* 缩小 26%：原 20px 14px -> 14.8, 10.4 */
+            .site-grid { gap: 14.8px 10.4px; }
             :root {
                 --title-width: clamp(200px, 90%, 520px);
             }
@@ -340,8 +291,8 @@
         }
 
         .backup-btn-large {
-            padding: 6.44px 14.8px;  /* Decreased by 20% */
-            font-size: 0.89rem;  /* Decreased by 20% */
+            padding: 6.44px 14.8px;
+            font-size: 0.89rem;
             color: var(--accent);
             border: 2px solid var(--accent);
             background: transparent;
@@ -349,8 +300,6 @@
             outline: none;
             cursor: pointer;
             transition: background 0.18s, color 0.18s;
-            /* 同样应用字体栈到大备份按钮，保持一致性 */
-            font-family: "Cagliostro", "Zhi Mang Xing", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
 
         .backup-btn-large:hover {
@@ -359,12 +308,12 @@
         }
 
         footer {
-            margin-top: 12px; /* Reduced margin-top */
+            margin-top: 12px;
             width: 100%;
             text-align: center;
             color: #929099;
             font-size: 1rem;
-            padding: 18px 0 13px 0; /* Reduced padding-top */
+            padding: 18px 0 13px 0;
             letter-spacing: 1px;
         }
 
@@ -382,25 +331,20 @@
           border-radius: 6px;
         }
 
-        /* 减少动画偏好时禁用画布动画（可访问性） */
         @media (prefers-reduced-motion: reduce) {
             #starfield { will-change: auto; }
         }
     </style>
 </head>
 <body>
-    <!-- 星星画布（在内容后面） -->
     <canvas id="starfield" aria-hidden="true"></canvas>
 
     <div class="container">
-        <!-- 应用 .title-box 保证与下方副标题宽度一致 -->
         <header class="title-box">
             看片儿导航
         </header>
         <div class="banner">
-            <!-- 同样应用 .title-box 保证宽度与 header 一致 -->
-            <!-- 将副标题使用 Ma Shan Zheng 字体（只影响此元素），但保证英文字母由 Cagliostro 渲染 -->
-            <h2 class="title-box msz">甄选国内外优秀影视资源站</h2>
+            <h2 class="title-box">甄选国内外优秀影视资源站</h2>
         </div>
         <div class="category-btns">
             <button class="category-btn" id="btn-pan" onclick="switchCategory('pan')">网盘</button>
@@ -408,15 +352,11 @@
             <button class="category-btn" id="btn-bt" onclick="switchCategory('bt')">BT</button>
         </div>
 
-        <!-- 包裹 site-grid 与 emby-box -->
         <div class="grid-wrapper">
             <div class="site-grid" id="siteGrid"></div>
 
-            <!-- 高清Emby服 的圆角方框（初始隐藏） -->
-            <!-- 为了可访问性与滚动控制，给 .card 一个 id 并允许 programmatic focus -->
-            <!-- 将 embyCard 的说明内容设置为 Ma Shan Zheng（只影响 embyCard 内部中文），但英文仍由 Cagliostro 渲染 -->
             <div id="embyBox" class="emby-box" aria-hidden="true">
-                <div id="embyCard" class="card msz" role="region" aria-label="高清Emby服说明" tabindex="-1">
+                <div id="embyCard" class="card" role="region" aria-label="高清Emby服说明" tabindex="-1">
                     <h3>高清Emby服</h3>
                     <p>如果你厌倦了视频网站多元的广告和模糊不清的画质，Emby服会是不错的选择。<br>
                     Emby服可大致分为以下两类：</p>
@@ -430,25 +370,21 @@
 >MICU</a>、<a  href="https://t.me/Emby_Navigation" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer"
 >付费Emby导航</a>
                     </ul>
-                    <p>注意事项：
+                    <p>注意事项：</p>
                     <ul>
                         <li>文中提到的Emby服仅作为示例展示，不是广告，跑路算你倒霉</li>
                         <li>购买前确保你可以访问相关Emby服线路，或咨询服主线路是否可以直连</li>
                         <li>详细教程请访问：<a href="https://emby.wiki/zh/home" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">https://emby.wiki</a></li>
-</p>
-                    <ul>
+                    </ul>
                 </div>
             </div>
         </div>
 
-        <!-- 将注释文字设置为 Ma Shan Zheng（只影响此 .notes 元素），但英文字母仍由 Cagliostro 渲染 -->
-        <div class="notes msz">
+        <div class="notes">
             注：EE3 邀请码：FMHY，访问不畅请布阵施法🪜
         </div>
         <div class="centered-backup-btn">
-            <!-- 按钮不再直接打开外部链接；改为 “高清Emby服” 并由 JS 控制显示/隐藏 -->
-            <!-- 将按钮文字设置为 Ma Shan Zheng（只影响此按钮的中文），但英文字母仍由 Cagliostro 渲染 -->
-            <button id="embyBtn" class="backup-btn-large msz" onclick="toggleEmby()">高清Emby服</button>
+            <button id="embyBtn" class="backup-btn-large" onclick="toggleEmby()">高清Emby服</button>
         </div>
         <footer>
             Made with ❤️
@@ -458,7 +394,6 @@
     </div>
 
 <script>
-    // 网站列表
     const SITES = [
         { name: "厂长资源", main_url: "https://cz233.com/", backup_url: "https://www.czzy.site/", tags: ["在线", "BT"] },
         { name: "NO视频", main_url: "https://www.novipnoad.cc/", backup_url: "https://findno.tv/", tags: ["在线"] },
@@ -480,7 +415,7 @@
         { name: "BEECH", main_url: "https://www.beech.watch", backup_url: "https://mocine.cam/", tags: ["在线"] },
         { name: "Bingeflix", main_url: "https://bingeflix.tv/movies", backup_url: "https://discord.com/invite/ajRY6Bn3rr", tags: ["在线"] },
         { name: "Flixer", main_url: "https://flixer.sh/", backup_url: "https://flixy.watch/", tags: ["在线"] },
-        { name: "BFLIX", main_url: "https://bflix.sh/movies/", backup_url: "", tags: ["在线"] },  
+        { name: "BFLIX", main_url: "https://bflix.sh/movies/", backup_url: "", tags: ["在线"] },
         { name: "AnimeKai", main_url: "https://animekai.cc/home", backup_url: "https://animekai.me", tags: ["在线"] },
         { name: "EE3", main_url: "https://ee3.me/", backup_url: "https://rips.cc/", tags: ["在线"] },
         { name: "BT之家", main_url: "https://1lou.one/", backup_url: "https://1lou.cc/", tags: ["BT", "网盘"] },
@@ -497,56 +432,44 @@
         { name: "ExtraTorrent", main_url: "https://extratorrent.st", backup_url: "", tags: ["BT"] },
     ];
 
-    let currentCategory = 'online';  // Default to 'online'
-    let embyActive = false; // 标记 Emby 展示状态
+    let currentCategory = 'online';
+    let embyActive = false;
 
     function switchCategory(category) {
         currentCategory = category;
         ['online','pan','bt'].forEach(c => {
             document.getElementById(`btn-${c}`).classList.toggle('active', c === category);
         });
-
-        // 切换分类时强制关闭 emby 显示（符合需求：切换分类会显示对应网站卡片）
         if (embyActive) {
-            hideEmby(false); // 隐藏 emby，但不要做额外动画 — 只恢复列表
+            hideEmby(false);
         }
-
         renderGrid();
     }
 
     function renderGrid() {
         const grid = document.getElementById("siteGrid");
         grid.innerHTML = '';
-
         let matchTag;
         if (currentCategory === "online") matchTag = "在线";
         if (currentCategory === "pan") matchTag = "网盘";
         if (currentCategory === "bt") matchTag = "BT";
-
         const filtered = SITES.filter(site => site.tags.includes(matchTag));
-
         filtered.forEach(site => {
             const card = document.createElement("div");
             card.className = 'site-card';
-
-            // 整卡片可点击
             card.onclick = function() {
                 window.open(site.main_url, "_blank");
             };
-
-            // 使用 <a> 代替 button，以便浏览器在悬停时显示原生 status bar
             const link = document.createElement('a');
             link.className = 'site-name';
             link.textContent = site.name;
             link.href = site.main_url;
             link.target = '_blank';
             link.rel = 'noopener noreferrer';
-            // 阻止冒泡以避免触发 card 的 onclick（但允许默认的导航/新标签打开）
             link.addEventListener('click', function(event) {
                 event.stopPropagation();
             });
             card.appendChild(link);
-
             if (site.backup_url && site.backup_url.trim().length > 0) {
                 const backupLink = document.createElement('a');
                 backupLink.className = "backup-link-btn";
@@ -570,14 +493,12 @@
                 });
                 card.appendChild(backupNoneLink);
             }
-
             grid.appendChild(card);
         });
     }
 
-    renderGrid();  // Render the sites initially with 'online' as the default category
+    renderGrid();
 
-    // Emby 控制函数：切换显示 / 隐藏 embyBox，并对 site-grid 执行快速淡出/恢复
     function toggleEmby() {
         if (!embyActive) {
             showEmby();
@@ -590,80 +511,51 @@
         const grid = document.getElementById('siteGrid');
         const embyBox = document.getElementById('embyBox');
         const embyCard = document.getElementById('embyCard');
-
-        // 快速淡出当前分类下的所有网站卡片（仅视觉上淡出，不改变布局）
         grid.classList.add('faded');
-
-        // 显示 emby 说明框
         embyBox.classList.add('show');
         embyBox.setAttribute('aria-hidden', 'false');
-
-        // Accessibility: make sure the emby card can receive programmatic focus
         if (embyCard) {
-            // on mobile (或窄屏) 自动滚动到 embyCard 的顶部，方便从段落开头阅读
             const isMobile = window.matchMedia && window.matchMedia('(max-width: 900px)').matches;
-
-            // 等待浏览器完成布局后再滚动/focus
             setTimeout(() => {
                 try {
                     if (isMobile) {
                         const rect = embyCard.getBoundingClientRect();
                         const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-                        // 目标 scrollTop：card 顶部对视口的位置减去一点 padding（12px）
                         const targetTop = Math.max(0, Math.floor(scrollY + rect.top - 12));
                         window.scrollTo({ top: targetTop, behavior: 'smooth' });
                     }
-                    // 将焦点移到 embyCard 上，便于屏幕阅读器和键盘用户（preventScroll:true 避免再次跳动）
                     embyCard.setAttribute('tabindex', '-1');
                     embyCard.focus && embyCard.focus({ preventScroll: true });
                 } catch (e) {
-                    // 在极少数浏览器上 focus({preventScroll:true}) 可能抛出，安全降级为 focus()
                     try { embyCard.focus && embyCard.focus(); } catch (err) {}
                 }
             }, 60);
         }
-
         embyActive = true;
     }
 
-    // hideWithAnimation 参数：为 true 时把 siteGrid 恢复带动画；为 false 时直接移除（用于分类切换时立即恢复）
     function hideEmby(hideWithAnimation = true) {
         const grid = document.getElementById('siteGrid');
         const embyBox = document.getElementById('embyBox');
         const embyCard = document.getElementById('embyCard');
-
-        // 隐藏 emby 说明框
         embyBox.classList.remove('show');
         embyBox.setAttribute('aria-hidden', 'true');
-
-        // 恢复网站卡片可见性
         if (hideWithAnimation) {
-            // 反向动画：先移除 faded class（CSS transition 会处理淡入）
             requestAnimationFrame(() => {
                 grid.classList.remove('faded');
             });
         } else {
-            // 立刻恢复（无动画）
             grid.classList.remove('faded');
         }
-
-        // 将焦点回送到触发按钮，提升无障碍体验
         try {
             const embyBtn = document.getElementById('embyBtn');
             if (embyBtn) embyBtn.focus({ preventScroll: true });
         } catch (e) {
             try { document.getElementById('embyBtn') && document.getElementById('embyBtn').focus(); } catch(err){}
         }
-
-        // 可选：移除 tabindex 保持 DOM 简洁（留着也没问题）
-        if (embyCard) {
-            // don't remove tabindex immediately to avoid screen-reader jump; leave it as -1
-        }
-
         embyActive = false;
     }
 
-    // 额外保证：如果页面加载时 embyActive 受用户设备或其他交互影响，保证开关正常
     document.getElementById('embyBtn').addEventListener('keydown', function(e){
         if(e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
@@ -673,14 +565,6 @@
 </script>
 
 <script>
-/*
- Starfield script — 修改说明:
- - 星星形状改为四角星（4-point）且两端较长、两端较短（交替长短尖）
- - 闪烁的时值（周期）加倍：所有时间相关乘数减半，使闪烁变慢为原来的 2 倍周期
- - 保持先前星星数量减半设置（area/24000）
- - 尊重 prefers-reduced-motion
-*/
-
 (function() {
     const canvas = document.getElementById('starfield');
     if (!canvas) return;
@@ -690,17 +574,13 @@
 
     function rand(min, max) { return min + Math.random() * (max - min); }
 
-    // 生成星星（数量已减半）
     function generateStars() {
         stars = [];
         const vw = Math.max(1, window.innerWidth);
         const vh = Math.max(1, window.innerHeight);
         const area = vw * vh;
-        // 密度减半（保持此前的 area / 24000）
         let count = Math.round(area / 24000);
-        // 限制数量（min/max 保持上一版的一半）
         count = Math.max(20, Math.min(count, 200));
-
         for (let i = 0; i < count; i++) {
             const sizeBias = Math.pow(Math.random(), 2);
             const r = 0.5 + sizeBias * 2.6;
@@ -709,15 +589,12 @@
                 y: Math.random() * vh,
                 r: r,
                 baseAlpha: 0.35 + Math.random() * 0.85,
-                // 保持速度分布，但绘制时时间乘数将减半以实现周期加倍
                 twinkleSpeed: 0.6 + Math.random() * 2.2,
                 phase: Math.random() * Math.PI * 2,
                 rotation: Math.random() * Math.PI * 2,
                 colorShift: (Math.random() * 40) - 10
             });
         }
-
-        // 少量更大的 spark
         const bigCount = Math.round(count * 0.01);
         for (let j = 0; j < bigCount; j++) {
             const r = 2.8 + Math.random() * 4.2;
@@ -747,13 +624,10 @@
         draw(0);
     }
 
-    // 绘制四角星（交替长短两端）
     function drawFourPointStar(x, y, r, alpha, rotation) {
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(rotation);
-
-        // glow for larger stars
         if (r > 1.6) {
             const glowR = Math.max(10, r * 5.0);
             const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, glowR);
@@ -766,13 +640,9 @@
             ctx.arc(0, 0, glowR, 0, Math.PI * 2);
             ctx.fill();
         }
-
-        // 四角星：交替长短尖（总共 8 个顶点：长短交替）
-        // longR: 长端半径， shortR: 短端半径
         const spikes = 4;
-        const longR = r * 3.8;   // 两端较长
-        const shortR = r * 1.6;  // 两端较短
-
+        const longR = r * 3.8;
+        const shortR = r * 1.6;
         ctx.beginPath();
         for (let i = 0; i < spikes * 2; i++) {
             const angle = (Math.PI / spikes) * i;
@@ -785,8 +655,6 @@
         ctx.closePath();
         ctx.fillStyle = `rgba(255,255,255,${alpha})`;
         ctx.fill();
-
-        // 更亮的内圈作为高光（缩小版的四角）
         ctx.beginPath();
         const cLong = r * 1.1;
         const cShort = r * 0.5;
@@ -801,32 +669,20 @@
         ctx.closePath();
         ctx.fillStyle = `rgba(255,255,255,${Math.min(1, alpha * 1.25)})`;
         ctx.fill();
-
         ctx.restore();
     }
 
-    // 绘制帧：将所有时间相关乘数减半以实现闪烁周期加倍（变慢）
     function draw(timeMs) {
         const t = (timeMs || 0) / 1000;
         ctx.clearRect(0, 0, width, height);
-
         for (let i = 0; i < stars.length; i++) {
             const s = stars[i];
-            // 正弦闪烁：tw 范围 [0,1]
-            const tw = 0.5 + 0.5 * Math.sin(s.phase + t * s.twinkleSpeed * 1.5); // 由 3.0 -> 1.5
-
-            // alpha 计算保持此前的增强（如果有），不更改幅度，仅改变时间
-            const amplitudeMultiplier = 1.05 * 1.4; // 保持上一版的放大逻辑
+            const tw = 0.5 + 0.5 * Math.sin(s.phase + t * s.twinkleSpeed * 1.5);
+            const amplitudeMultiplier = 1.05 * 1.4;
             const alpha = Math.max(0, Math.min(1, s.baseAlpha * (0.25 + amplitudeMultiplier * tw)));
-
-            // 半径随闪烁轻微变化，时间乘数减半（3.2 -> 1.6），幅度保持
             const rScale = 1 + (0.45 * 1.4) * Math.sin(s.phase * 1.3 + t * s.twinkleSpeed * 1.6);
             const drawR = Math.max(0.35, s.r * rScale);
-
-            // 旋转随时间缓慢变化，时间乘数减半（0.6 -> 0.3）
             const rotation = s.rotation + Math.sin(t * s.twinkleSpeed * 0.3 + s.phase) * 0.15;
-
-            // 使用两端长短交替的四角星形状绘制
             drawFourPointStar(s.x, s.y, drawR, alpha, rotation);
         }
     }
@@ -845,7 +701,6 @@
         window._starResizeTimeout = setTimeout(resizeCanvas, 120);
     });
 
-    // 根据偏好启停动画
     if (!reduceMotion) {
         rafId = window.requestAnimationFrame(animate);
         if (window.matchMedia) {
