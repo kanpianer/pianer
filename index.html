@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>看片儿导航</title>
+    <title>不想看片</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E😈%3C/text%3E%3C/svg%3E">
-    <link rel="stylesheet" href="https://googledonts.private.coffee/css2?family=LXGW+WenKai+TC&display=swap">
+    <link rel="stylesheet" href="https://googledonts.private.coffee/css2?family=LXGW+WenKai+TC&family=Zhi+Mang+Xing&display=swap">
     <style>
         :root {
             --primary: #fff;
@@ -41,6 +41,17 @@
             font-family: "LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
 
+        /* Title specific font: Zhi Mang Xing */
+        header {
+            font-family: "Zhi Mang Xing", "LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin-top: 64px; /* 向下移动标题 */
+            margin-bottom: 4px; /* 缩短标题与副标题距离到与副标题与按钮距离一致 */
+            line-height: 0.85;
+        }
+
         #starfield {
             position: fixed;
             inset: 0;
@@ -73,25 +84,17 @@
             word-break: keep-all;
         }
 
-        header {
-            font-size: 2.2rem;
-            font-weight: 700;
-            letter-spacing: 4px;
-            margin-top: 44px;
-            margin-bottom: 16px;
-            line-height: 1.05;
-        }
         .banner {
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         .banner h2 {
             font-size: 1.3rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 8px; /* 副标题与按钮的距离（保持为 8px） */
             color: var(--accent);
         }
         .banner .banner-action {
@@ -102,7 +105,7 @@
         .category-btns {
             display: flex;
             gap: 14px;
-            margin-bottom: 16px;
+            margin-bottom: 16px; /* 按钮与卡片之间的距离，设置为与副标题间距一致（8px） */
             justify-content: center;
             width: 100%;
         }
@@ -134,6 +137,7 @@
             width: 100%;
             position: relative;
             margin-bottom: 8px;
+            margin-top: 8px; /* 增加按钮与网站卡片之间的空间（与副标题-按钮距离一致） */
             min-height: 150px;
             display: block;
         }
@@ -142,7 +146,7 @@
             width: 100%;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 22.2px 14.8px;
+            gap: 22.2px 8.8px;
             justify-items: center;
             align-items: start;
             margin-bottom: 0;
@@ -157,13 +161,14 @@
             pointer-events: none;
         }
 
+        /* 缩小网站卡片约 5%：调整宽度、内边距与最小高度 */
         .site-card {
             background: var(--muted);
             border-radius: 17px;
             box-shadow: 0 2px 8px rgba(20,24,32, 0.09);
-            padding: 18.7px 23.8px;
-            width: 85%;
-            min-height: 80px;
+            padding: 17.8px 22.6px; /* 原 18.7px 23.8px 缩小 ~5% */
+            width: 80.75%; /* 原 85% 缩小 ~5% */
+            min-height: 76px; /* 原 80px 缩小 ~5% */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -265,6 +270,10 @@
             :root {
                 --title-width: clamp(220px, 80%, 680px);
             }
+            /* 移动端也相应缩小卡片内边距 */
+            .site-card {
+                padding: 15.9px 21.5px; /* roughly 5% smaller than mobile original padding */
+            }
         }
         @media screen and (max-width: 600px) {
             header { font-size: 1.82rem; letter-spacing: 2px; }
@@ -293,7 +302,7 @@
         .centered-backup-btn {
             width: 100%;
             text-align: center;
-            margin: 12px 0;
+            margin: 6px 0;
             /* 改为 flex 居中排列两个按钮并保持间距 */
             display: flex;
             justify-content: center;
@@ -351,11 +360,9 @@
     <canvas id="starfield" aria-hidden="true"></canvas>
 
     <div class="container">
-        <header class="title-box">
-            看片儿导航
-        </header>
+        <header class="title-box">不想看片</header>
         <div class="banner">
-            <h2 class="title-box">甄选国内外优秀影视资源站</h2>
+            <h2 class="title-box">优选全球影视资源</h2>
         </div>
         <div class="category-btns">
             <button class="category-btn" id="btn-pan" onclick="switchCategory('pan')">网盘</button>
@@ -389,14 +396,14 @@
             <template id="okTemplate">
                 <h3>OK影视</h3>
                 <p>
-                    OK影视使用起来和Emby差不多，填写好配置接口的地址就可以了。<br>
+                    OK影视/TVBox使用起来和Emby差不多，填写好配置接口的地址就可以了。<br>
 
                     详细教程和相关资源可访问以下链接：<br>
                 <ul>
-                    <li><a href="https://blog.ccino.org/p/tvbox-tv-version-installation-and-configuration-complete-guide/" target="_blank" rel="noopener noreferrer" style="color: #9e9eff;"> TVBox电视版安装配置全指南（2025最新版）</a></li>
+                    <li><a href="https://blog.ccino.org/p/tvbox-tv-version-installation-and-configuration-complete-guide/" target="_blank" rel="noopener noreferrer" style="color: #9e9eff;">TVBox电视版安装配置全指南</a></li>
                     <li><a href="https://t.me/tvb_ys" target="_blank" rel="noopener noreferrer" style="color: #9e9eff;">TVB/影視(OK) 电报频道</li>
-                    <li><a href="https://github.com/qist/tvbox" target="_blank" rel="noopener noreferrer" style="color: #9e9eff;">OK影视各种客户端和配置链接（文件）</a></li>
-                    <li><a href="https://www.饭太硬.com" target="_blank" rel="noopener noreferrer" style="color: #9e9eff;">饭太硬配置接口导航</a></li>
+                    <li><a href="https://github.com/qist/tvbox" target="_blank" rel="noopener noreferrer" style="color: #9e9eff;">OK影视 各种客户端和配置接口</a></li>
+                    <li><a href="https://www.饭太硬.com" target="_blank" rel="noopener noreferrer" style="color: #9e9eff;">饭太硬 配置接口导航</a></li>
                 </ul>
             </template>
         </div>
