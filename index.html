@@ -19,26 +19,27 @@
             --page-padding-x:clamp(16px,4vw,40px);
             --title-width:clamp(260px,56%,760px);
         }
-        *{box-sizing:border-box}
-        html,body{height:100%}
+
+        * { box-sizing: border-box; }
+        html, body { height: 100%; }
+
+        /* 全站（除标题外）默认字体为 LXGW WenKai TC */
         body{
             margin:0;
             background:radial-gradient(1200px 600px at 10% 20%, rgba(20,24,48,0.55), transparent 20%),
                        radial-gradient(900px 500px at 90% 80%, rgba(10,8,30,0.55), transparent 20%),
                        linear-gradient(180deg,#020417 0%,#07122b 50%,#081025 100%);
             color:var(--primary);
-            font-family:"LXGW WenKai TC",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+            font-family:"LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             min-height:100vh;
             display:flex;
             flex-direction:column;
             overflow-x:hidden;
         }
 
-        /* 全局超链接文字颜色 */
-        a { color: #9e9eff; }
-
-        header{
-            font-family:"Zhi Mang Xing","LXGW WenKai TC",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+        /* 标题单独使用 Zhi Mang Xing（仅用于 header.title-box） */
+        header.title-box {
+            font-family: "Zhi Mang Xing", "LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             font-size:2.6rem;
             font-weight:700;
             letter-spacing:3px;
@@ -49,6 +50,9 @@
             width:var(--title-width);
             margin-inline:auto;
         }
+
+        /* 全局超链接文字颜色统一 */
+        a { color: #9e9eff; }
 
         #starfield{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
 
@@ -68,8 +72,9 @@
 
         .banner{width:100%;display:flex;flex-direction:column;align-items:center;margin-bottom:14px}
         .banner h2{font-size:1.3rem;font-weight:600;margin-bottom:8px;color:var(--accent);text-align:center}
+        .banner a{color:#9e9eff}
 
-        /* 确保分类按钮使用 LXGW WenKai TC 字体 */
+        /* 分类按钮确保使用 LXGW WenKai TC（按钮文字也要用该字体） */
         .category-btns{display:flex;gap:14px;margin-bottom:16px;justify-content:center;width:100%}
         .category-btn{
             font-family:"LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -93,32 +98,48 @@
         }
         .site-card:hover{transform:scale(1.2);box-shadow:0 8px 15px rgba(0,0,0,0.2)}
 
-        .site-name{font-weight:600;margin-bottom:13px;text-align:center;background:none;border:none;color:inherit;cursor:pointer;transition:color .17s;font-size:1.296rem;text-decoration:none;display:inline-block;padding:0}
+        .site-name{
+            font-family:"LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-weight:600;margin-bottom:13px;text-align:center;background:none;border:none;color:inherit;cursor:pointer;transition:color .17s;font-size:1.296rem;text-decoration:none;display:inline-block;padding:0
+        }
         .site-name:hover{color:var(--accent);text-decoration:underline}
 
         .backup-link-btn,.backup-none-btn{
+            font-family:"LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             padding:7px 16px;font-size:.97rem;border:2px solid var(--outline);border-radius:13px;background:transparent;outline:none;cursor:pointer;transition:background .2s,color .15s,border-color .17s;text-decoration:none;display:inline-block;margin-top:6px;
         }
-        /* 备份链接和没有备份按钮的默认文字颜色（全局 a 规则已设为 #9e9eff）*/
-        .backup-link-btn, .backup-none-btn { color: #9e9eff; }
 
-        /* 仅把卡片内显示为“备份网址”的链接文字颜色设为 #ff5630 */
-        .site-card .backup-link-btn { color: #ff5630; }
+        /* 备份按钮默认遵循全局 a 颜色，但卡片内的“备份网址”文字特意强调为 --accent (#ff5630) */
+        .backup-link-btn, .backup-none-btn { color: #9e9eff; }
+        .site-card .backup-link-btn { color: var(--accent); }
 
         .backup-link-btn:hover,.backup-none-btn:hover{background:var(--accent);color:var(--background);border-color:var(--fixed);transform:translateY(-2px) scale(1.04)}
         .backup-none-btn{color:#b6b2b2;border-color:var(--outline)}
 
         .emby-box{position:absolute;inset:0;display:none;z-index:2;align-items:center;justify-content:center;padding:18px;box-sizing:border-box}
-        .emby-box .card{width:100%;max-width:980px;background:transparent;border-radius:0;border:none;padding:clamp(14px,2.2vw,28px);color:#f6f4f6;box-shadow:none;display:flex;flex-direction:column;gap:10px;text-align:left;font-size:clamp(1.15rem,2vw,1.28rem);line-height:1.55}
+        .emby-box .card{
+            width:100%;max-width:980px;background:transparent;border-radius:0;border:none;padding:clamp(14px,2.2vw,28px);
+            color:#f6f4f6;box-shadow:none;display:flex;flex-direction:column;gap:10px;text-align:left;
+            font-family:"LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size:clamp(1.15rem,2vw,1.28rem);line-height:1.55
+        }
         .emby-box h3{margin:0;font-size:clamp(1.05rem,2.4vw,1.28rem);color:var(--accent);letter-spacing:.6px}
         .emby-box p{margin:0;color:#d7d4d8}
         .emby-box ul{margin:0 0 0 1.2em;color:#d0cdd1}
         .emby-box small{color:#bcb8c0}
         .emby-box.show{display:flex}
 
-        .notes{display:flex;justify-content:center;align-items:center;width:100%;text-align:center;font-size:.98rem;color:#bcb8c0;margin:4px 0;line-height:1.7}
-        .centered-backup-btn{width:100%;text-align:center;margin:6px 0;display:flex;justify-content:center;align-items:center;gap:12px}
-        .backup-btn-large{padding:6.44px 14.8px;font-size:.89rem;color:var(--accent);border:2px solid var(--accent);background:transparent;border-radius:28px;outline:none;cursor:pointer;transition:background .18s,color .18s}
+        .notes{
+            display:flex;justify-content:center;align-items:center;width:100%;text-align:center;font-size:.98rem;color:#bcb8c0;margin:4px 0;line-height:1.7;
+            font-family:"LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .centered-backup-btn{
+            width:100%;text-align:center;margin:6px 0;display:flex;justify-content:center;align-items:center;gap:12px;
+        }
+        .backup-btn-large{
+            padding:6.44px 14.8px;font-size:.89rem;color:var(--accent);border:2px solid var(--accent);background:transparent;border-radius:28px;outline:none;cursor:pointer;transition:background .18s,color .18s;
+            font-family:"LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
         .backup-btn-large:hover{background:var(--accent);color:var(--background)}
 
         footer{margin-top:6px;width:100%;text-align:center;color:#929099;font-size:1rem;padding:18px 0 13px 0;letter-spacing:1px}
@@ -133,7 +154,7 @@
             .site-card{padding:15.9px 21.5px}
         }
         @media screen and (max-width:600px){
-            header{font-size:1.82rem;letter-spacing:2px}
+            header.title-box{font-size:1.82rem;letter-spacing:2px}
             .site-card{padding:16px 14px}
             .banner h2{font-size:1rem}
             .category-btn{font-size:.87rem;padding:8px 12px}
