@@ -7,353 +7,130 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E😈%3C/text%3E%3C/svg%3E">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC&family=Zhi+Mang+Xing&display=swap">
     <style>
-        :root {
-            --primary: #fff;
-            --background: #0b1220;
-            --accent: #ff5630;
-            --muted: rgba(52, 54, 70, 0.5);
-            --button-hover: #353949;
-            --outline: #ff56309c;
-            --fixed: #ff5630;
-            --page-max-width: 1200px;
-            --page-padding-x: clamp(16px, 4vw, 40px);
-            --title-width: clamp(260px, 56%, 760px);
+        :root{
+            --primary:#fff;
+            --background:#0b1220;
+            --accent:#ff5630;
+            --muted:rgba(52,54,70,0.5);
+            --button-hover:#353949;
+            --outline:#ff56309c;
+            --fixed:#ff5630;
+            --page-max-width:1200px;
+            --page-padding-x:clamp(16px,4vw,40px);
+            --title-width:clamp(260px,56%,760px);
+        }
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            margin:0;
+            background:radial-gradient(1200px 600px at 10% 20%, rgba(20,24,48,0.55), transparent 20%),
+                       radial-gradient(900px 500px at 90% 80%, rgba(10,8,30,0.55), transparent 20%),
+                       linear-gradient(180deg,#020417 0%,#07122b 50%,#081025 100%);
+            color:var(--primary);
+            font-family:"LXGW WenKai TC",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+            min-height:100vh;
+            display:flex;
+            flex-direction:column;
+            overflow-x:hidden;
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            background: radial-gradient(1200px 600px at 10% 20%, rgba(20,24,48,0.55), transparent 20%),
-                        radial-gradient(900px 500px at 90% 80%, rgba(10,8,30,0.55), transparent 20%),
-                        linear-gradient(180deg, #020417 0%, #07122b 50%, #081025 100%);
-            color: var(--primary);
-            font-family: "LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            min-height: 100vh;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
-        *, *::before, *::after { box-sizing: inherit; }
-
-        /* Ensure all interactive labels and site text use LXGW WenKai TC */
-        .category-btn, .backup-btn-large, .site-name, .backup-link-btn, .backup-none-btn, .emby-box .card, .site-card, .notes, footer, .category-btns {
-            font-family: "LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        header{
+            font-family:"Zhi Mang Xing","LXGW WenKai TC",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+            font-size:2.6rem;
+            font-weight:700;
+            letter-spacing:3px;
+            margin-top:64px;
+            margin-bottom:4px;
+            line-height:0.85;
+            text-align:center;
+            width:var(--title-width);
+            margin-inline:auto;
         }
 
-        /* Title specific font: Zhi Mang Xing */
-        header {
-            font-family: "Zhi Mang Xing", "LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            font-size: 2.6rem;
-            font-weight: 700;
-            letter-spacing: 3px;
-            margin-top: 64px; /* 向下移动标题 */
-            margin-bottom: 4px; /* 缩短标题与副标题距离到与副标题与按钮距离一致 */
-            line-height: 0.85;
+        #starfield{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+        .container{
+            flex:1;
+            display:flex;
+            flex-direction:column;
+            width:100%;
+            max-width:var(--page-max-width);
+            margin-inline:auto;
+            padding-left:var(--page-padding-x);
+            padding-right:var(--page-padding-x);
+            align-items:center;
+            position:relative;
+            z-index:1;
         }
 
-        #starfield {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            display: block;
-            pointer-events: none;
-        }
+        .banner{width:100%;display:flex;flex-direction:column;align-items:center;margin-bottom:14px}
+        .banner h2{font-size:1.3rem;font-weight:600;margin-bottom:8px;color:var(--accent);text-align:center}
+        .banner a{color:#9e9eff}
 
-        .container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            max-width: var(--page-max-width);
-            margin-inline: auto;
-            padding-left: var(--page-padding-x);
-            padding-right: var(--page-padding-x);
-            align-items: center;
-            position: relative;
-            z-index: 1;
+        .category-btns{display:flex;gap:14px;margin-bottom:16px;justify-content:center;width:100%}
+        .category-btn{
+            min-width:86px;padding:10px 22px;font-size:1.01rem;border-radius:22px;
+            background:var(--muted);color:var(--primary);border:none;cursor:pointer;font-weight:600;
+            transition:background .18s,color .18s,transform .14s;outline:2px solid transparent;
         }
+        .category-btn:hover{background:var(--button-hover);color:var(--accent);transform:translateY(-2px) scale(1.03)}
+        .category-btn.active{background:rgba(255,86,48,0.5);color:var(--background);outline:2px solid var(--fixed)}
 
-        .title-box {
-            width: var(--title-width);
-            margin-inline: auto;
-            text-align: center;
-            display: block;
-            word-break: keep-all;
+        .grid-wrapper{width:100%;position:relative;margin:8px 0;min-height:150px}
+        .site-grid{
+            width:100%;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+            gap:22.2px 8.8px;justify-items:center;align-items:start;min-height:150px;transition:opacity 220ms ease,transform 220ms ease;position:relative;z-index:1;
         }
+        .site-grid.faded{opacity:0;pointer-events:none}
 
-        .banner {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 14px;
+        .site-card{
+            background:var(--muted);border-radius:17px;box-shadow:0 2px 8px rgba(20,24,32,0.09);
+            padding:17.8px 22.6px;width:80.75%;min-height:76px;display:flex;flex-direction:column;align-items:center;position:relative;cursor:pointer;transition:transform .3s ease,box-shadow .2s ease;
         }
-        .banner h2 {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 8px; /* 副标题与按钮的距离（保持为 8px） */
-            color: var(--accent);
-        }
-        .banner .banner-action {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .category-btns {
-            display: flex;
-            gap: 14px;
-            margin-bottom: 16px; /* 按钮与卡片之间的距离，设置为与副标题间距一致（8px） */
-            justify-content: center;
-            width: 100%;
-        }
-        .category-btn {
-            min-width: 86px;
-            padding: 10px 22px;
-            font-size: 1.01rem;
-            border-radius: 22px;
-            background: var(--muted);
-            color: var(--primary);
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.18s, color 0.18s, transform 0.14s;
-            outline: 2px solid transparent;
-        }
-        .category-btn:hover {
-            background: var(--button-hover);
-            color: var(--accent);
-            transform: translateY(-2px) scale(1.03);
-        }
-        .category-btn.active {
-            background: rgba(255, 86, 48, 0.5);
-            color: var(--background);
-            outline: 2px solid var(--fixed);
-        }
+        .site-card:hover{transform:scale(1.2);box-shadow:0 8px 15px rgba(0,0,0,0.2)}
 
-        .grid-wrapper {
-            width: 100%;
-            position: relative;
-            margin-bottom: 8px;
-            margin-top: 8px; /* 增加按钮与网站卡片之间的空间（与副标题-按钮距离一致） */
-            min-height: 150px;
-            display: block;
-        }
+        .site-name{font-weight:600;margin-bottom:13px;text-align:center;background:none;border:none;color:inherit;cursor:pointer;transition:color .17s;font-size:1.296rem;text-decoration:none;display:inline-block;padding:0}
+        .site-name:hover{color:var(--accent);text-decoration:underline}
 
-        .site-grid {
-            width: 100%;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 22.2px 8.8px;
-            justify-items: center;
-            align-items: start;
-            margin-bottom: 0;
-            min-height: 150px;
-            transition: opacity 220ms ease, transform 220ms ease;
-            position: relative;
-            z-index: 1;
+        .backup-link-btn,.backup-none-btn{
+            padding:7px 16px;font-size:.97rem;border:2px solid var(--outline);border-radius:13px;background:transparent;color:var(--accent);outline:none;cursor:pointer;transition:background .2s,color .15s,border-color .17s;text-decoration:none;display:inline-block;margin-top:6px;
         }
+        .backup-link-btn:hover,.backup-none-btn:hover{background:var(--accent);color:var(--background);border-color:var(--fixed);transform:translateY(-2px) scale(1.04)}
+        .backup-none-btn{color:#b6b2b2;border-color:var(--outline)}
 
-        .site-grid.faded {
-            opacity: 0;
-            pointer-events: none;
-        }
+        .emby-box{position:absolute;inset:0;display:none;z-index:2;align-items:center;justify-content:center;padding:18px;box-sizing:border-box}
+        .emby-box .card{width:100%;max-width:980px;background:transparent;border-radius:0;border:none;padding:clamp(14px,2.2vw,28px);color:#f6f4f6;box-shadow:none;display:flex;flex-direction:column;gap:10px;text-align:left;font-size:clamp(1.15rem,2vw,1.28rem);line-height:1.55}
+        .emby-box h3{margin:0;font-size:clamp(1.05rem,2.4vw,1.28rem);color:var(--accent);letter-spacing:.6px}
+        .emby-box p{margin:0;color:#d7d4d8}
+        .emby-box ul{margin:0 0 0 1.2em;color:#d0cdd1}
+        .emby-box small{color:#bcb8c0}
+        .emby-box.show{display:flex}
 
-        /* 缩小网站卡片约 5%：调整宽度、内边距与最小高度 */
-        .site-card {
-            background: var(--muted);
-            border-radius: 17px;
-            box-shadow: 0 2px 8px rgba(20,24,32, 0.09);
-            padding: 17.8px 22.6px; /* 原 18.7px 23.8px 缩小 ~5% */
-            width: 80.75%; /* 原 85% 缩小 ~5% */
-            min-height: 76px; /* 原 80px 缩小 ~5% */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.2s ease;
-        }
-        .site-card:hover {
-            transform: scale(1.2);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-        }
+        .notes{display:flex;justify-content:center;align-items:center;width:100%;text-align:center;font-size:.98rem;color:#bcb8c0;margin:4px 0;line-height:1.7}
+        .centered-backup-btn{width:100%;text-align:center;margin:6px 0;display:flex;justify-content:center;align-items:center;gap:12px}
+        .backup-btn-large{padding:6.44px 14.8px;font-size:.89rem;color:var(--accent);border:2px solid var(--accent);background:transparent;border-radius:28px;outline:none;cursor:pointer;transition:background .18s,color .18s}
+        .backup-btn-large:hover{background:var(--accent);color:var(--background)}
 
-        .site-name {
-            font-weight: 600;
-            margin-bottom: 13px;
-            text-align: center;
-            background: none;
-            border: none;
-            color: inherit;
-            cursor: pointer;
-            transition: color .17s;
-            font-size: 1.296rem;
-            text-decoration: none;
-            display: inline-block;
-            padding: 0;
-        }
-        .site-name:hover {
-            color: var(--accent);
-            text-decoration: underline;
-        }
-        .backup-link-btn, .backup-none-btn {
-            padding: 7px 16px;
-            font-size: 0.97rem;
-            border: 2px solid var(--outline);
-            border-radius: 13px;
-            background: transparent;
-            color: var(--accent);
-            outline: none;
-            cursor: pointer;
-            transition: background 0.2s, color 0.15s, border-color 0.17s;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 6px;
-        }
-        .backup-link-btn:hover, .backup-none-btn:hover {
-            background: var(--accent);
-            color: var(--background);
-            border-color: var(--fixed);
-            transform: translateY(-2px) scale(1.04);
-        }
-        .backup-none-btn {
-            color: #b6b2b2;
-            border-color: var(--outline);
-        }
+        footer{margin-top:6px;width:100%;text-align:center;color:#929099;font-size:1rem;padding:18px 0 13px 0;letter-spacing:1px}
+        footer a{color:var(--accent);text-decoration:none;margin-left:10px}
 
-        .emby-box {
-            position: absolute;
-            inset: 0;
-            display: none;
-            z-index: 2;
-            align-items: center;
-            justify-content: center;
-            padding: 18px;
-            box-sizing: border-box;
-        }
-        /* 去除外部圆角外框：设置背景、边框和阴影为空/无圆角，保留文字样式与内边距 */
-        .emby-box .card {
-            width: 100%;
-            max-width: 980px;
-            background: transparent;
-            border-radius: 0;
-            border: none;
-            padding: clamp(14px, 2.2vw, 28px);
-            color: #f6f4f6;
-            box-shadow: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            text-align: left;
-            font-size: clamp(1.15rem, 2vw, 1.28rem);
-            line-height: 1.55;
-        }
-        .emby-box h3 {
-            margin: 0;
-            font-size: clamp(1.05rem, 2.4vw, 1.28rem);
-            color: var(--accent);
-            letter-spacing: 0.6px;
-        }
-        .emby-box p { margin: 0; color: #d7d4d8; }
-        .emby-box ul { margin: 0 0 0 1.2em; color: #d0cdd1; }
-        .emby-box small { color: #bcb8c0; }
+        ::-webkit-scrollbar{width:8px;background:var(--muted)}
+        ::-webkit-scrollbar-thumb{background:rgba(52,54,70,0.5);border-radius:6px}
 
-        .emby-box.show { display: flex; }
-
-        @media screen and (max-width: 900px) {
-            .site-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            }
-            :root {
-                --title-width: clamp(220px, 80%, 680px);
-            }
-            /* 移动端也相应缩小卡片内边距 */
-            .site-card {
-                padding: 15.9px 21.5px; /* roughly 5% smaller than mobile original padding */
-            }
+        @media screen and (max-width:900px){
+            .site-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+            :root{--title-width:clamp(220px,80%,680px)}
+            .site-card{padding:15.9px 21.5px}
         }
-        @media screen and (max-width: 600px) {
-            header { font-size: 1.82rem; letter-spacing: 2px; }
-            .site-card { padding: 16px 14px; }
-            .banner h2 { font-size: 1rem; }
-            .category-btn { font-size: 0.87rem; padding: 8px 12px; }
-            .site-grid { gap: 14.8px 10.4px; }
-            :root {
-                --title-width: clamp(200px, 90%, 520px);
-            }
+        @media screen and (max-width:600px){
+            header{font-size:1.82rem;letter-spacing:2px}
+            .site-card{padding:16px 14px}
+            .banner h2{font-size:1rem}
+            .category-btn{font-size:.87rem;padding:8px 12px}
+            .site-grid{gap:14.8px 10.4px}
+            :root{--title-width:clamp(200px,90%,520px)}
         }
-
-        .notes {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            text-align: center;
-            font-size: .98rem;
-            color: #bcb8c0;
-            margin-bottom: 4px;
-            margin-top: 4px;
-            line-height: 1.7;
-        }
-
-        .centered-backup-btn {
-            width: 100%;
-            text-align: center;
-            margin: 6px 0;
-            /* 改为 flex 居中排列两个按钮并保持间距 */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .backup-btn-large {
-            padding: 6.44px 14.8px;
-            font-size: 0.89rem;
-            color: var(--accent);
-            border: 2px solid var(--accent);
-            background: transparent;
-            border-radius: 28px;
-            outline: none;
-            cursor: pointer;
-            transition: background 0.18s, color 0.18s;
-        }
-
-        .backup-btn-large:hover {
-            background: var(--accent);
-            color: var(--background);
-        }
-
-        footer {
-            margin-top: 6px;
-            width: 100%;
-            text-align: center;
-            color: #929099;
-            font-size: 1rem;
-            padding: 18px 0 13px 0;
-            letter-spacing: 1px;
-        }
-
-        footer a {
-            color: var(--accent);
-            text-decoration: none;
-            margin-left: 10px;
-        }
-        ::-webkit-scrollbar {
-          width: 8px;
-          background: var(--muted);
-        }
-        ::-webkit-scrollbar-thumb {
-          background: rgba(52, 54, 70, 0.5);
-          border-radius: 6px;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            #starfield { will-change: auto; }
-        }
+        @media (prefers-reduced-motion:reduce){#starfield{will-change:auto}}
     </style>
 </head>
 <body>
@@ -361,396 +138,341 @@
 
     <div class="container">
         <header class="title-box">不想看片</header>
+
         <div class="banner">
-            <h2 class="title-box">优选全球影视资源</br>网址 <a href="https://pianer.top" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">pianer.top</a> 将在12月13号“失效”，请用新网址：<a href="https://bxkp.org" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">bxkp.org</a></h2>
+            <h2 class="title-box">优选全球影视资源</br>网址 <a href="https://pianer.top" target="_blank" rel="noopener noreferrer">pianer.top</a> 将在12月13号“失效”，请用新网址：<a href="https://bxkp.org" target="_blank" rel="noopener noreferrer">bxkp.org</a></h2>
         </div>
+
         <div class="category-btns">
-            <button class="category-btn" id="btn-pan" onclick="switchCategory('pan')">网盘</button>
-            <button class="category-btn active" id="btn-online" onclick="switchCategory('online')">在线</button>
-            <button class="category-btn" id="btn-bt" onclick="switchCategory('bt')">BT</button>
+            <button class="category-btn" id="btn-pan" data-cat="pan">网盘</button>
+            <button class="category-btn active" id="btn-online" data-cat="online">在线</button>
+            <button class="category-btn" id="btn-bt" data-cat="bt">BT</button>
         </div>
 
         <div class="grid-wrapper">
             <div class="site-grid" id="siteGrid"></div>
 
             <div id="embyBox" class="emby-box" aria-hidden="true">
-                <!-- 单一浮层容器（内容会由 JS 填充），初始内容为Emby服说明，便于直接在 HTML 编辑 -->
                 <div id="embyCard" class="card" role="region" aria-label="浮层说明" tabindex="-1">
                     <h3>Emby服</h3>
-                    <p>如果你厌倦了视频网站多元的广告和模糊不清的画质，Emby服会是不错的选择。<br>
-                    Emby服可大致分为以下两类：</p>
+                    <p>如果你厌倦了视频网站多元的广告和模糊不清的画质，Emby服会是不错的选择。<br>Emby服可大致分为以下两类：</p>
                     <ul>
-                        <li>公益服：无需付费，但可能有一定入服门槛</li><a href="https://intro.bgp.yt/" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">二次元Emby</a>、<a href="https://t.me/embyxk" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">公益服星空指南</a>、<a href="https://t.me/FreeEmbyGuide" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">公益不完全指北</a>
-                        <li>付费服：需要付费，但服务会相对比较稳定</li><a href="https://plan.emby.moe/" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">1111Emby</a>、<a href="https://micu.hk/archives/emby-users" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">MICU</a>、<a  href="https://t.me/Emby_Navigation" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">付费Emby导航</a>
+                        <li>公益服：无需付费，但可能有一定入服门槛</li>
+                        <a href="https://intro.bgp.yt/" target="_blank" rel="noopener noreferrer">二次元Emby</a>、
+                        <a href="https://t.me/embyxk" target="_blank" rel="noopener noreferrer">公益服星空指南</a>、
+                        <a href="https://t.me/FreeEmbyGuide" target="_blank" rel="noopener noreferrer">公益不完全指北</a>
+                        <li>付费服：需要付费，但服务会相对比较稳定</li>
+                        <a href="https://plan.emby.moe/" target="_blank" rel="noopener noreferrer">1111Emby</a>、
+                        <a href="https://micu.hk/archives/emby-users" target="_blank" rel="noopener noreferrer">MICU</a>、
+                        <a href="https://t.me/Emby_Navigation" target="_blank" rel="noopener noreferrer">付费Emby导航</a>
                     </ul>
                     <p>注意事项：</p>
                     <ul>
                         <li>文中提到的Emby服仅作为示例，不是广告，跑路算你倒霉</li>
                         <li>购买前确保你可以访问相关Emby服线路，或咨询服主线路是否可以直连</li>
-                        <li>详细教程请访问：<a href="https://emby.wiki/zh/home" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">https://emby.wiki</a></li>
+                        <li>详细教程请访问：<a href="https://emby.wiki/zh/home" target="_blank" rel="noopener noreferrer">https://emby.wiki</a></li>
                     </ul>
                 </div>
             </div>
 
-            <!-- 模板：OK影视的说明放在 HTML 模板里，方便日后直接在文件中编辑 -->
             <template id="okTemplate">
                 <h3>OK影视</h3>
-                <p>
-                    OK影视/TVBox使用起来和Emby差不多，填写好配置接口的地址就可以了。<br>
-
-                    详细教程和相关资源可访问以下链接：<br>
+                <p>OK影视/TVBox使用起来和Emby差不多，填写好配置接口的地址就可以了。<br>详细教程和相关资源可访问以下链接：</p>
                 <ul>
-                    <li><a href="https://blog.ccino.org/p/tvbox-tv-version-installation-and-configuration-complete-guide/" target="_blank" rel="noopener noreferrer" style="color: #9e9eff;">TVBox电视版安装配置全指南</a></li>
-                    <li><a href="https://t.me/tvb_ys" target="_blank" rel="noopener noreferrer" style="color: #9e9eff;">TVB/影視(OK) 电报频道</li>
-                    <li><a href="https://github.com/qist/tvbox" target="_blank" rel="noopener noreferrer" style="color: #9e9eff;">OK影视 各种客户端和配置接口</a></li>
-                    <li><a href="https://www.饭太硬.com" target="_blank" rel="noopener noreferrer" style="color: #9e9eff;">饭太硬 配置接口导航</a></li>
+                    <li><a href="https://blog.ccino.org/p/tvbox-tv-version-installation-and-configuration-complete-guide/" target="_blank" rel="noopener noreferrer">TVBox电视版安装配置全指南</a></li>
+                    <li><a href="https://t.me/tvb_ys" target="_blank" rel="noopener noreferrer">TVB/影視(OK) 电报频道</a></li>
+                    <li><a href="https://github.com/qist/tvbox" target="_blank" rel="noopener noreferrer">OK影视 各种客户端和配置接口</a></li>
+                    <li><a href="https://www.饭太硬.com" target="_blank" rel="noopener noreferrer">饭太硬 配置接口导航</a></li>
                 </ul>
             </template>
         </div>
 
         <div class="notes">
             <li>
-                  注：EE3 邀请码： <a style="color: #ff5630;">FMHY</a>
-                  <br>
-            备份网址：<a href="https://www.bxkp.org" style="color: #9e9eff;" target="_blank">www</a>、
-            <a href="https://v.bxkp.org" style="color: #9e9eff;" target="_blank">Vercel</a>、
-            <a href="https://bxkp.netlify.app" style="color: #9e9eff;" target="_blank">Netlify</a>
+                注：EE3 邀请码： <a style="color: #ff5630;">FMHY</a>
+                <br>备份网址：<a href="https://www.bxkp.org" target="_blank">www</a>、<a href="https://v.bxkp.org" target="_blank">Vercel</a>、<a href="https://bxkp.netlify.app" target="_blank">Netlify</a>
             </li>
         </div>
+
         <div class="centered-backup-btn">
-            <button id="embyBtn" class="backup-btn-large" data-type="emby" onclick="toggleInfo('emby')">Emby服</button>
-            <button id="okBtn" class="backup-btn-large" data-type="ok" onclick="toggleInfo('ok')">OK影视</button>
+            <button id="embyBtn" class="backup-btn-large" data-type="emby">Emby服</button>
+            <button id="okBtn" class="backup-btn-large" data-type="ok">OK影视</button>
         </div>
+
         <footer>
             Made with ❤️
             <a href="https://github.com/kanpianer/pianer" target="_blank">Github</a>
-            <a href="https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4" target="_blank">网站备份</a>            
+            <a href="https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4" target="_blank">网站备份</a>
         </footer>
-
     </div>
 
 <script>
     const SITES = [
-        { name: "厂长资源", main_url: "https://www.cz4k.com/", backup_url: "https://www.czzy.site/", tags: ["在线", "BT"] },
-        { name: "NO视频", main_url: "https://www.novipnoad.cc/", backup_url: "https://findno.tv/", tags: ["在线"] },
-        { name: "两个BT", main_url: "https://www.bttwo.me", backup_url: "https://bttwo.vip/", tags: ["在线", ""] },
-        { name: "修罗影视", main_url: "https://xl01.com.de/", backup_url: "https://xlys.me/", tags: ["在线", "BT"] },
-        { name: "观影 GYING", main_url: "https://gyg.la/", backup_url: "https://gyg.si/", tags: ["网盘", "BT", "在线"] },
-        { name: "GoPlay", main_url: "https://goplay.su/", backup_url: "https://discord.com/invite/yY2P3DQR8S", tags: ["在线"] },
-        { name: "趣盘|七米蓝", main_url: "https://pan.mediy.cn", backup_url: "https://al.chirmyram.com", tags: ["在线"] },
-        { name: "玩偶哥哥", main_url: "https://www.wogg.one", backup_url: "", tags: ["网盘"] },
-        { name: "老K", main_url: "https://docs.qq.com/doc/DTk5EaVdWY2R6ZnBk", backup_url: "", tags: ["网盘"] },
-        { name: "PanHub", main_url: "https://www.panhub.com.cn", backup_url: "", tags: ["网盘"] },
-        { name: "混合盘", main_url: "https://hunhepan.com/search", backup_url: "https://hhp.panso.me", tags: ["网盘"] },        
-        { name: "PanSearch", main_url: "https://pansearch.me/", backup_url: "", tags: ["网盘"] },
-        { name: "爱盼", main_url: "https://www.aipan.me", backup_url: "", tags: ["网盘"] },
-        { name: "阿里云资源", main_url: "https://slowread.net/", backup_url: "", tags: ["网盘"] },
-        { name: "ShowBox", main_url: "https://www.showbox.media/", backup_url: "", tags: ["网盘"] },
-        { name: "EE3", main_url: "https://ee3.me/", backup_url: "https://rips.cc/", tags: ["在线"] },
-        { name: "Fmovies+", main_url: "https://www.fmovies.gd/", backup_url: "contact@fmovies.gd", tags: ["在线"] },
-        { name: "Cinemaos", main_url: "https://cinemaos.live", backup_url: "https://discord.com/invite/38yFnFCJnA", tags: ["在线"] },
-        { name: "Heartive", main_url: "https://heartive.pages.dev/", backup_url: "heartive@vjuum.com", tags: ["在线"] },
-        { name: "BEECH", main_url: "https://www.beech.watch", backup_url: "https://mocine.cam/", tags: ["在线"] },
-        { name: "Mapple", main_url: "https://mapple.mov/", backup_url: "https://mapple.site/", tags: ["在线"] },
-        { name: "P-Stream", main_url: "https://pstream.mov", backup_url: "https://discord.com/invite/jZ6kkzADWS", tags: ["在线"] },
-        { name: "AnimeKai", main_url: "https://animekai.cc/home", backup_url: "https://animekai.me", tags: ["在线"] },
-        { name: "BT之家", main_url: "https://1lou.one/", backup_url: "https://1lou.cc/", tags: ["BT", "网盘"] },
-        { name: "磁力熊", main_url: "https://www.cilixiong.org", backup_url: "https://www.cilixiong.cc", tags: ["BT"] },
-        { name: "磁力帝", main_url: "https://cldcld.cc", backup_url: "https://cldcld.top", tags: ["BT"] },
-        { name: "1337X", main_url: "https://1337x.to/", backup_url: "https://1337x-status.org/", tags: ["BT"] },
-        { name: "YTS", main_url: "https://yts.mx/", backup_url: "https://gosites.org/yts", tags: ["BT"] },
-        { name: "EXT", main_url: "https://ext.to/", backup_url: "", tags: ["BT"] },
-        { name: "BDigg", main_url: "https://btdig.com/", backup_url: "", tags: ["BT"] },
-        { name: "Knaben", main_url: "https://knaben.org/", backup_url: "http://knabenxyzjl3bt5al7awroewfkg37x6duutapjytdib4w42mk2kiqpid.onion/", tags: ["BT"] },
-        { name: "iDope", main_url: "https://idope.hair", backup_url: "", tags: ["BT"] },
-        { name: "ACG.RIP", main_url: "https://acg.rip", backup_url: "", tags: ["BT"] },
-        { name: "LimeTorrents", main_url: "https://www.limetorrents.asia", backup_url: "https://limetorrent.si/", tags: ["BT"] },
-        { name: "ExtraTorrent", main_url: "https://extratorrent.st", backup_url: "", tags: ["BT"] },
+        {name:"厂长资源",main_url:"https://www.cz4k.com/",backup_url:"https://www.czzy.site/",tags:["在线","BT"]},
+        {name:"NO视频",main_url:"https://www.novipnoad.cc/",backup_url:"https://findno.tv/",tags:["在线"]},
+        {name:"两个BT",main_url:"https://www.bttwo.me",backup_url:"https://bttwo.vip/",tags:["在线",""]},
+        {name:"修罗影视",main_url:"https://xl01.com.de/",backup_url:"https://xlys.me/",tags:["在线","BT"]},
+        {name:"观影 GYING",main_url:"https://gyg.la/",backup_url:"https://gyg.si/",tags:["网盘","BT","在线"]},
+        {name:"GoPlay",main_url:"https://goplay.su/",backup_url:"https://discord.com/invite/yY2P3DQR8S",tags:["在线"]},
+        {name:"趣盘|七米蓝",main_url:"https://pan.mediy.cn",backup_url:"https://al.chirmyram.com",tags:["在线"]},
+        {name:"玩偶哥哥",main_url:"https://www.wogg.one",backup_url:"",tags:["网盘"]},
+        {name:"老K",main_url:"https://docs.qq.com/doc/DTk5EaVdWY2R6ZnBk",backup_url:"",tags:["网盘"]},
+        {name:"PanHub",main_url:"https://www.panhub.com.cn",backup_url:"",tags:["网盘"]},
+        {name:"混合盘",main_url:"https://hunhepan.com/search",backup_url:"https://hhp.panso.me",tags:["网盘"]},
+        {name:"PanSearch",main_url:"https://pansearch.me/",backup_url:"",tags:["网盘"]},
+        {name:"爱盼",main_url:"https://www.aipan.me",backup_url:"",tags:["网盘"]},
+        {name:"阿里云资源",main_url:"https://slowread.net/",backup_url:"",tags:["网盘"]},
+        {name:"ShowBox",main_url:"https://www.showbox.media/",backup_url:"",tags:["网盘"]},
+        {name:"EE3",main_url:"https://ee3.me/",backup_url:"https://rips.cc/",tags:["在线"]},
+        {name:"Fmovies+",main_url:"https://www.fmovies.gd/",backup_url:"contact@fmovies.gd",tags:["在线"]},
+        {name:"Cinemaos",main_url:"https://cinemaos.live",backup_url:"https://discord.com/invite/38yFnFCJnA",tags:["在线"]},
+        {name:"Heartive",main_url:"https://heartive.pages.dev/",backup_url:"heartive@vjuum.com",tags:["在线"]},
+        {name:"BEECH",main_url:"https://www.beech.watch",backup_url:"https://mocine.cam/",tags:["在线"]},
+        {name:"Mapple",main_url:"https://mapple.mov/",backup_url:"https://mapple.site/",tags:["在线"]},
+        {name:"P-Stream",main_url:"https://pstream.mov",backup_url:"https://discord.com/invite/jZ6kkzADWS",tags:["在线"]},
+        {name:"AnimeKai",main_url:"https://animekai.cc/home",backup_url:"https://animekai.me",tags:["在线"]},
+        {name:"BT之家",main_url:"https://1lou.one/",backup_url:"https://1lou.cc/",tags:["BT","网盘"]},
+        {name:"磁力熊",main_url:"https://www.cilixiong.org",backup_url:"https://www.cilixiong.cc",tags:["BT"]},
+        {name:"磁力帝",main_url:"https://cldcld.cc",backup_url:"https://cldcld.top",tags:["BT"]},
+        {name:"1337X",main_url:"https://1337x.to/",backup_url:"https://1337x-status.org/",tags:["BT"]},
+        {name:"YTS",main_url:"https://yts.mx/",backup_url:"https://gosites.org/yts",tags:["BT"]},
+        {name:"EXT",main_url:"https://ext.to/",backup_url:"",tags:["BT"]},
+        {name:"BDigg",main_url:"https://btdig.com/",backup_url:"",tags:["BT"]},
+        {name:"Knaben",main_url:"https://knaben.org/",backup_url:"http://knabenxyzjl3bt5al7awroewfkg37x6duutapjytdib4w42mk2kiqpid.onion/",tags:["BT"]},
+        {name:"iDope",main_url:"https://idope.hair",backup_url:"",tags:["BT"]},
+        {name:"ACG.RIP",main_url:"https://acg.rip",backup_url:"",tags:["BT"]},
+        {name:"LimeTorrents",main_url:"https://www.limetorrents.asia",backup_url:"https://limetorrent.si/",tags:["BT"]},
+        {name:"ExtraTorrent",main_url:"https://extratorrent.st",backup_url:"",tags:["BT"]},
     ];
 
     let currentCategory = 'online';
-    // infoActive 表示是否正在展示浮层，currentInfoType 保存当前展示的类型： 'emby' 或 'ok'
     let infoActive = false;
     let currentInfoType = null;
 
-    function switchCategory(category) {
+    const gridEl = document.getElementById('siteGrid');
+    const embyBox = document.getElementById('embyBox');
+    const embyCard = document.getElementById('embyCard');
+    const originalEmbyHTML = embyCard ? embyCard.innerHTML : '';
+    const btns = document.querySelectorAll('.category-btn');
+
+    function switchCategory(category){
         currentCategory = category;
-        ['online','pan','bt'].forEach(c => {
-            const el = document.getElementById(`btn-${c}`);
-            if (el) el.classList.toggle('active', c === category);
-        });
-        if (infoActive) {
-            hideInfo(false);
-        }
+        btns.forEach(b => b.classList.toggle('active', b.dataset.cat === category));
+        if (infoActive) hideInfo(false);
         renderGrid();
     }
 
-    function renderGrid() {
-        const grid = document.getElementById("siteGrid");
-        grid.innerHTML = '';
-        let matchTag;
-        if (currentCategory === "online") matchTag = "在线";
-        if (currentCategory === "pan") matchTag = "网盘";
-        if (currentCategory === "bt") matchTag = "BT";
-        const filtered = SITES.filter(site => site.tags.includes(matchTag));
+    function renderGrid(){
+        if(!gridEl) return;
+        gridEl.innerHTML = '';
+        const tag = currentCategory === 'online' ? '在线' : currentCategory === 'pan' ? '网盘' : 'BT';
+        const filtered = SITES.filter(s => s.tags.includes(tag));
         filtered.forEach(site => {
-            const card = document.createElement("div");
+            const card = document.createElement('div');
             card.className = 'site-card';
-            card.onclick = function() {
-                window.open(site.main_url, "_blank");
-            };
+            card.onclick = () => window.open(site.main_url, '_blank');
+
             const link = document.createElement('a');
             link.className = 'site-name';
             link.textContent = site.name;
             link.href = site.main_url;
             link.target = '_blank';
             link.rel = 'noopener noreferrer';
-            link.addEventListener('click', function(event) {
-                event.stopPropagation();
-            });
+            link.addEventListener('click', e => e.stopPropagation());
             card.appendChild(link);
-            if (site.backup_url && site.backup_url.trim().length > 0) {
-                const backupLink = document.createElement('a');
-                backupLink.className = "backup-link-btn";
-                backupLink.textContent = "备份网址";
-                backupLink.href = site.backup_url;
-                backupLink.target = '_blank';
-                backupLink.rel = 'noopener noreferrer';
-                backupLink.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                });
-                card.appendChild(backupLink);
-            } else {
-                const backupNoneLink = document.createElement('a');
-                backupNoneLink.className = "backup-none-btn";
-                backupNoneLink.textContent = "没有备份";
-                backupNoneLink.href = "https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4";
-                backupNoneLink.target = '_blank';
-                backupNoneLink.rel = 'noopener noreferrer';
-                backupNoneLink.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                });
-                card.appendChild(backupNoneLink);
-            }
-            grid.appendChild(card);
+
+            const hasBackup = site.backup_url && site.backup_url.trim().length > 0;
+            const backup = document.createElement('a');
+            backup.className = hasBackup ? 'backup-link-btn' : 'backup-none-btn';
+            backup.textContent = hasBackup ? '备份网址' : '没有备份';
+            backup.href = hasBackup ? site.backup_url : 'https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4';
+            backup.target = '_blank';
+            backup.rel = 'noopener noreferrer';
+            backup.addEventListener('click', e => e.stopPropagation());
+            card.appendChild(backup);
+
+            gridEl.appendChild(card);
         });
     }
 
     renderGrid();
 
-    // 保存原始 embyCard 的 HTML（便于恢复）
-    const embyCardEl = document.getElementById('embyCard');
-    const originalEmbyHTML = embyCardEl ? embyCardEl.innerHTML : '';
-
-    function toggleInfo(type) {
-        if (!infoActive || currentInfoType !== type) {
-            showInfo(type);
-        } else {
-            hideInfo(true);
-        }
-    }
-
-    function showInfo(type) {
-        const grid = document.getElementById('siteGrid');
-        const embyBox = document.getElementById('embyBox');
-        const embyCardEl = document.getElementById('embyCard');
-        if (!embyBox || !embyCardEl) return;
-        // 根据类型填充对应 HTML 模板（模板保存在 HTML 中，方便直接编辑）
-        if (type === 'emby') {
-            embyCardEl.innerHTML = originalEmbyHTML;
-            embyCardEl.setAttribute('aria-label', 'Emby服说明');
-        } else if (type === 'ok') {
+    function showInfo(type){
+        if(!embyBox || !embyCard) return;
+        if(type === 'emby'){
+            embyCard.innerHTML = originalEmbyHTML;
+            embyCard.setAttribute('aria-label','Emby服说明');
+        }else{
             const tpl = document.getElementById('okTemplate');
-            if (tpl) {
-                embyCardEl.innerHTML = tpl.innerHTML;
-                embyCardEl.setAttribute('aria-label', 'OK影视说明');
-            } else {
-                embyCardEl.innerHTML = '<h3>OK影视</h3><p>OK影视说明文字</p>';
-            }
+            embyCard.innerHTML = tpl ? tpl.innerHTML : '<h3>OK影视</h3><p>OK影视说明文字</p>';
+            embyCard.setAttribute('aria-label','OK影视说明');
         }
         embyBox.classList.add('show');
-        embyBox.setAttribute('aria-hidden', 'false');
-        grid.classList.add('faded');
+        embyBox.setAttribute('aria-hidden','false');
+        gridEl.classList.add('faded');
 
-        const isMobile = window.matchMedia && window.matchMedia('(max-width: 900px)').matches;
+        const isMobile = window.matchMedia && window.matchMedia('(max-width:900px)').matches;
         setTimeout(() => {
-            try {
-                if (isMobile) {
-                    const rect = embyCardEl.getBoundingClientRect();
-                    const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-                    const targetTop = Math.max(0, Math.floor(scrollY + rect.top - 12));
-                    window.scrollTo({ top: targetTop, behavior: 'smooth' });
-                }
-                embyCardEl.setAttribute('tabindex', '-1');
-                embyCardEl.focus && embyCardEl.focus({ preventScroll: true });
-            } catch (e) {
-                try { embyCardEl.focus && embyCardEl.focus(); } catch (err) {}
+            if(isMobile){
+                const rect = embyCard.getBoundingClientRect();
+                const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+                const targetTop = Math.max(0, Math.floor(scrollY + rect.top - 12));
+                window.scrollTo({top:targetTop,behavior:'smooth'});
             }
-        }, 60);
+            embyCard.setAttribute('tabindex','-1');
+            try{ embyCard.focus && embyCard.focus({preventScroll:true}); }catch(e){}
+        },60);
         infoActive = true;
         currentInfoType = type;
     }
 
-    function hideInfo(hideWithAnimation = true) {
-        const grid = document.getElementById('siteGrid');
-        const embyBox = document.getElementById('embyBox');
-        const embyCardEl = document.getElementById('embyCard');
-        if (!embyBox || !embyCardEl) return;
+    function hideInfo(hideWithAnimation = true){
+        if(!embyBox || !embyCard) return;
         embyBox.classList.remove('show');
-        embyBox.setAttribute('aria-hidden', 'true');
-        if (hideWithAnimation) {
-            requestAnimationFrame(() => {
-                grid.classList.remove('faded');
-            });
-        } else {
-            grid.classList.remove('faded');
-        }
-        try {
+        embyBox.setAttribute('aria-hidden','true');
+        if(hideWithAnimation) requestAnimationFrame(() => gridEl.classList.remove('faded'));
+        else gridEl.classList.remove('faded');
+
+        try{
             const embyBtn = document.getElementById('embyBtn');
             const okBtn = document.getElementById('okBtn');
-            // 将焦点返回到最后点击的按钮（优先返回 okBtn，如果当前类型为 emby 则返回 embyBtn）
-            if (currentInfoType === 'ok' && okBtn) okBtn.focus({ preventScroll: true });
-            else if (embyBtn) embyBtn.focus({ preventScroll: true });
-        } catch (e) {
-            try { document.getElementById('embyBtn') && document.getElementById('embyBtn').focus(); } catch(err){}
-        }
+            if(currentInfoType === 'ok' && okBtn) okBtn.focus({preventScroll:true});
+            else if(embyBtn) embyBtn.focus({preventScroll:true});
+        }catch(e){}
         infoActive = false;
         currentInfoType = null;
     }
 
-    // 键盘支持：Enter / Space
-    const embyBtnEl = document.getElementById('embyBtn');
-    const okBtnEl = document.getElementById('okBtn');
-    if (embyBtnEl) {
-        embyBtnEl.addEventListener('keydown', function(e){
-            if(e.key === 'Enter' || e.key === ' ') {
+    document.getElementById('embyBtn')?.addEventListener('click', () => { toggleInfo('emby'); });
+    document.getElementById('okBtn')?.addEventListener('click', () => { toggleInfo('ok'); });
+
+    document.querySelectorAll('.category-btn').forEach(btn => btn.addEventListener('click', e => {
+        switchCategory(btn.dataset.cat);
+    }));
+
+    function toggleInfo(type){
+        if(!infoActive || currentInfoType !== type) showInfo(type);
+        else hideInfo(true);
+    }
+
+    ['embyBtn','okBtn'].forEach(id => {
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.addEventListener('keydown', e => {
+            if(e.key === 'Enter' || e.key === ' '){
                 e.preventDefault();
-                toggleInfo('emby');
+                toggleInfo(el.dataset.type);
             }
         });
-    }
-    if (okBtnEl) {
-        okBtnEl.addEventListener('keydown', function(e){
-            if(e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                toggleInfo('ok');
-            }
-        });
-    }
+    });
 </script>
 
 <script>
-(function() {
+(function(){
     const canvas = document.getElementById('starfield');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d', { alpha: true });
-    let stars = [];
-    let width = 0, height = 0, dpr = 1;
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d',{alpha:true});
+    let stars = [], width=0, height=0, dpr=1, rafId=null;
 
-    function rand(min, max) { return min + Math.random() * (max - min); }
+    function rand(min,max){return min + Math.random()*(max-min)}
 
-    function generateStars() {
+    function generateStars(){
         stars = [];
         const vw = Math.max(1, window.innerWidth);
         const vh = Math.max(1, window.innerHeight);
         const area = vw * vh;
         let count = Math.round(area / 24000);
         count = Math.max(20, Math.min(count, 200));
-        for (let i = 0; i < count; i++) {
-            const sizeBias = Math.pow(Math.random(), 2);
+        for(let i=0;i<count;i++){
+            const sizeBias = Math.pow(Math.random(),2);
             const r = 0.5 + sizeBias * 2.6;
             stars.push({
-                x: Math.random() * vw,
-                y: Math.random() * vh,
-                r: r,
-                baseAlpha: 0.35 + Math.random() * 0.85,
-                twinkleSpeed: 0.6 + Math.random() * 2.2,
-                phase: Math.random() * Math.PI * 2,
-                rotation: Math.random() * Math.PI * 2,
-                colorShift: (Math.random() * 40) - 10
+                x: Math.random()*vw,
+                y: Math.random()*vh,
+                r,
+                baseAlpha: 0.35 + Math.random()*0.85,
+                twinkleSpeed: 0.6 + Math.random()*2.2,
+                phase: Math.random()*Math.PI*2,
+                rotation: Math.random()*Math.PI*2,
+                colorShift: (Math.random()*40)-10
             });
         }
-        const bigCount = Math.round(count * 0.01);
-        for (let j = 0; j < bigCount; j++) {
-            const r = 2.8 + Math.random() * 4.2;
+        const bigCount = Math.round(count*0.01);
+        for(let j=0;j<bigCount;j++){
+            const r = 2.8 + Math.random()*4.2;
             stars.push({
-                x: Math.random() * vw,
-                y: Math.random() * vh,
-                r: r,
-                baseAlpha: 0.7 + Math.random() * 0.5,
-                twinkleSpeed: 0.3 + Math.random() * 1.2,
-                phase: Math.random() * Math.PI * 2,
-                rotation: Math.random() * Math.PI * 2,
-                colorShift: (Math.random() * 40) - 10
+                x: Math.random()*vw,
+                y: Math.random()*vh,
+                r,
+                baseAlpha: 0.7 + Math.random()*0.5,
+                twinkleSpeed: 0.3 + Math.random()*1.2,
+                phase: Math.random()*Math.PI*2,
+                rotation: Math.random()*Math.PI*2,
+                colorShift: (Math.random()*40)-10
             });
         }
     }
 
-    function resizeCanvas() {
+    function resizeCanvas(){
         dpr = window.devicePixelRatio || 1;
         canvas.style.width = window.innerWidth + 'px';
         canvas.style.height = window.innerHeight + 'px';
         canvas.width = Math.max(1, Math.floor(window.innerWidth * dpr));
         canvas.height = Math.max(1, Math.floor(window.innerHeight * dpr));
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.setTransform(dpr,0,0,dpr,0,0);
         width = window.innerWidth;
         height = window.innerHeight;
         generateStars();
         draw(0);
     }
 
-    function drawFourPointStar(x, y, r, alpha, rotation) {
+    function drawFourPointStar(x,y,r,alpha,rotation){
         ctx.save();
-        ctx.translate(x, y);
+        ctx.translate(x,y);
         ctx.rotate(rotation);
-        if (r > 1.6) {
-            const glowR = Math.max(10, r * 5.0);
-            const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, glowR);
-            grad.addColorStop(0, `rgba(255,255,255,${Math.min(1, alpha * 1.0)})`);
-            grad.addColorStop(0.12, `rgba(255,240,220,${alpha * 0.26})`);
-            grad.addColorStop(0.4, `rgba(200,220,255,${alpha * 0.06})`);
-            grad.addColorStop(1, 'rgba(0,0,0,0)');
+        if(r>1.6){
+            const glowR = Math.max(10, r*5.0);
+            const grad = ctx.createRadialGradient(0,0,0,0,0,glowR);
+            grad.addColorStop(0, `rgba(255,255,255,${Math.min(1, alpha*1.0)})`);
+            grad.addColorStop(0.12, `rgba(255,240,220,${alpha*0.26})`);
+            grad.addColorStop(0.4, `rgba(200,220,255,${alpha*0.06})`);
+            grad.addColorStop(1,'rgba(0,0,0,0)');
             ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.arc(0, 0, glowR, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.beginPath(); ctx.arc(0,0,glowR,0,Math.PI*2); ctx.fill();
         }
         const spikes = 4;
-        const longR = r * 3.8;
-        const shortR = r * 1.6;
+        const longR = r*3.8, shortR = r*1.6;
         ctx.beginPath();
-        for (let i = 0; i < spikes * 2; i++) {
-            const angle = (Math.PI / spikes) * i;
-            const radius = (i % 2 === 0) ? longR : shortR;
-            const px = Math.cos(angle - Math.PI / 2) * radius;
-            const py = Math.sin(angle - Math.PI / 2) * radius;
-            if (i === 0) ctx.moveTo(px, py);
-            else ctx.lineTo(px, py);
+        for(let i=0;i<spikes*2;i++){
+            const angle = (Math.PI/spikes)*i;
+            const radius = (i%2===0)?longR:shortR;
+            const px = Math.cos(angle - Math.PI/2)*radius;
+            const py = Math.sin(angle - Math.PI/2)*radius;
+            i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
         }
         ctx.closePath();
         ctx.fillStyle = `rgba(255,255,255,${alpha})`;
         ctx.fill();
+
         ctx.beginPath();
-        const cLong = r * 1.1;
-        const cShort = r * 0.5;
-        for (let i = 0; i < spikes * 2; i++) {
-            const angle = (Math.PI / spikes) * i;
-            const radius = (i % 2 === 0) ? cLong : cShort;
-            const px = Math.cos(angle - Math.PI / 2) * radius;
-            const py = Math.sin(angle - Math.PI / 2) * radius;
-            if (i === 0) ctx.moveTo(px, py);
-            else ctx.lineTo(px, py);
+        const cLong = r*1.1, cShort = r*0.5;
+        for(let i=0;i<spikes*2;i++){
+            const angle = (Math.PI/spikes)*i;
+            const radius = (i%2===0)?cLong:cShort;
+            const px = Math.cos(angle - Math.PI/2)*radius;
+            const py = Math.sin(angle - Math.PI/2)*radius;
+            i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
         }
         ctx.closePath();
-        ctx.fillStyle = `rgba(255,255,255,${Math.min(1, alpha * 1.25)})`;
+        ctx.fillStyle = `rgba(255,255,255,${Math.min(1, alpha*1.25)})`;
         ctx.fill();
         ctx.restore();
     }
 
-    function draw(timeMs) {
-        const t = (timeMs || 0) / 1000;
-        ctx.clearRect(0, 0, width, height);
-        for (let i = 0; i < stars.length; i++) {
+    function draw(timeMs){
+        const t = (timeMs || 0)/1000;
+        ctx.clearRect(0,0,width,height);
+        for(let i=0;i<stars.length;i++){
             const s = stars[i];
             const tw = 0.5 + 0.5 * Math.sin(s.phase + t * s.twinkleSpeed * 1.5);
             const amplitudeMultiplier = 1.05 * 1.4;
@@ -762,10 +484,9 @@
         }
     }
 
-    let rafId = null;
-    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function animate(timestamp) {
+    function animate(timestamp){
         draw(timestamp);
         rafId = window.requestAnimationFrame(animate);
     }
@@ -776,23 +497,19 @@
         window._starResizeTimeout = setTimeout(resizeCanvas, 120);
     });
 
-    if (!reduceMotion) {
+    if(!reduceMotion){
         rafId = window.requestAnimationFrame(animate);
-        if (window.matchMedia) {
+        if(window.matchMedia){
             const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
             mq.addEventListener && mq.addEventListener('change', e => {
-                if (e.matches) {
-                    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-                    draw(0);
-                } else {
-                    if (!rafId) rafId = requestAnimationFrame(animate);
-                }
+                reduceMotion = e.matches;
+                if (reduceMotion){ cancelAnimationFrame(rafId); rafId = null; draw(0); }
+                else if(!rafId) rafId = requestAnimationFrame(animate);
             });
         }
-    } else {
+    }else{
         draw(0);
     }
-    
 })();
 </script>
 </body>
