@@ -26,9 +26,8 @@
         /* 全站（除标题外）默认字体为 LXGW WenKai TC */
         body{
             margin:0;
-            background:radial-gradient(1200px 600px at 10% 20%, rgba(20,24,48,0.55), transparent 20%),
-                       radial-gradient(900px 500px at 90% 80%, rgba(10,8,30,0.55), transparent 20%),
-                       linear-gradient(180deg,#020417 0%,#07122b 50%,#081025 100%);
+            /* 统一为暗黑色夜空背景 */
+            background-color: var(--background);
             color:var(--primary);
             font-family:"LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             min-height:100vh;
@@ -171,7 +170,7 @@
         <header class="title-box">不想看片</header>
 
         <div class="banner">
-            <h2 class="title-box">优选全球影视资源</br>网址 <a href="https://pianer.top" target="_blank" rel="noopener noreferrer">pianer.top</a> 将在12月13号“失效”，请用新网址：<a href="https://bxkp.org" target="_blank" rel="noopener noreferrer">bxkp.org</a></h2>
+            <h2 class="title-box">优选全球影视资源</h2>
         </div>
 
         <div class="category-btns">
@@ -208,7 +207,7 @@
 
             <template id="okTemplate">
                 <h3>OK影视</h3>
-                <p>OK影视/TVBox使用起来和Emby差不多，填写好配置接口的地址就可以了。<br>详细教程和相关资源可访问以下链接：</p>
+                <p>OK影视/TVBox使用起来和Emby差不多，一般填写好配置接口的地址就可以了。<br>详细教程和相关资源可访问以下链接：</p>
                 <ul>
                     <li><a href="https://blog.ccino.org/p/tvbox-tv-version-installation-and-configuration-complete-guide/" target="_blank" rel="noopener noreferrer">TVBox电视版安装配置全指南</a></li>
                     <li><a href="https://t.me/tvb_ys" target="_blank" rel="noopener noreferrer">TVB/影視(OK) 电报频道</a></li>
@@ -220,7 +219,7 @@
 
         <div class="notes">
             <li>
-                注：EE3 邀请码： <a style="color: #ff5630;">FMHY</a>
+                注：EE3 邀请码： <a style="color: #ff5630;">FMHY</a> 推荐使用 <a href="https://4get.canine.tools/web?s=Vivaldi浏览器" target="_blank">Vivaldi浏览器</a> 科学访问
                 <br>备份网址：<a href="https://www.bxkp.org" target="_blank">www</a>、<a href="https://v.bxkp.org" target="_blank">Vercel</a>、<a href="https://bxkp.netlify.app" target="_blank">Netlify</a>
             </li>
         </div>
@@ -254,6 +253,7 @@
         {name:"爱盼",main_url:"https://www.aipan.me",backup_url:"",tags:["网盘"]},
         {name:"阿里云资源",main_url:"https://slowread.net/",backup_url:"",tags:["网盘"]},
         {name:"ShowBox",main_url:"https://www.showbox.media/",backup_url:"",tags:["网盘"]},
+        {name:"AGE动漫",main_url:"https://www.agedm.io/",backup_url:"http://www.age.tv/",tags:["在线"]},
         {name:"EE3",main_url:"https://ee3.me/",backup_url:"https://rips.cc/",tags:["在线"]},
         {name:"Cineby",main_url:"https://www.cineby.gd/",backup_url:"https://www.fmovies.gd/",tags:["在线"]},
         {name:"Cinemaos",main_url:"https://cinemaos.live",backup_url:"https://discord.com/invite/38yFnFCJnA",tags:["在线"]},
@@ -261,7 +261,6 @@
         {name:"BEECH",main_url:"https://www.beech.watch",backup_url:"https://mocine.cam/",tags:["在线"]},
         {name:"Mapple",main_url:"https://mapple.mov/",backup_url:"https://mapple.site/",tags:["在线"]},
         {name:"P-Stream",main_url:"https://pstream.mov",backup_url:"https://discord.com/invite/jZ6kkzADWS",tags:["在线"]},
-        {name:"AnimeKai",main_url:"https://animekai.cc/home",backup_url:"https://animekai.me",tags:["在线"]},
         {name:"BT之家",main_url:"https://1lou.one/",backup_url:"https://1lou.cc/",tags:["BT","网盘"]},
         {name:"磁力熊",main_url:"https://www.cilixiong.org",backup_url:"https://www.cilixiong.cc",tags:["BT"]},
         {name:"磁力帝",main_url:"https://cldcld.cc",backup_url:"https://cldcld.top",tags:["BT"]},
