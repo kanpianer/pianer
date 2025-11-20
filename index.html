@@ -9,9 +9,7 @@
     <style>
         :root{
             --primary:#e8eefc;
-            /* 夜空基色（用于控件的深色基调） */
             --background:#030417;
-            /* 重点色改成与夜空更协调的柔和蓝（而非强烈橙色） */
             --accent:#7ea8ff;
             --muted:rgba(40,44,60,0.55);
             --button-hover:rgba(80,88,120,0.38);
@@ -23,9 +21,8 @@
         }
 
         * { box-sizing: border-box; }
-        html, body { height: 100%; }
+        html, body { height: 100%; background: var(--background); }
 
-        /* 全站（除标题外）默认字体为 LXGW WenKai TC */
         body{
             margin:0;
             color:var(--primary);
@@ -35,15 +32,10 @@
             flex-direction:column;
             overflow-x:hidden;
 
-            /* 统一暗黑夜空背景：深色线性 + 2 个柔和雷云/星云径向渐变以增加层次感 */
-            background:
-                radial-gradient(circle at 20% 12%, rgba(20,30,60,0.28), transparent 14%),
-                radial-gradient(circle at 85% 70%, rgba(6,12,28,0.28), transparent 18%),
-                linear-gradient(180deg, #020214 0%, #05102a 65%, #00101a 100%);
-            background-attachment: fixed;
+            /* 使用统一深色背景（保留星云/径向画布覆盖层） */
+            background: var(--background);
         }
 
-        /* 标题单独使用 Zhi Mang Xing（仅用于 header.title-box） */
         header.title-box {
             font-family: "Zhi Mang Xing", "LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             font-size:2.6rem;
@@ -59,11 +51,9 @@
             text-shadow: 0 2px 10px rgba(0,0,0,0.6);
         }
 
-        /* 全局超链接文字颜色统一（更偏柔和蓝，和夜空一致） */
         a { color: var(--accent); text-decoration: none; }
         a:hover { text-decoration: underline; }
 
-        /* 星云画布（在 body 背景前） */
         #starfield{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
 
         .container{
@@ -83,7 +73,6 @@
         .banner{width:100%;display:flex;flex-direction:column;align-items:center;margin-bottom:14px}
         .banner h2{font-size:1.3rem;font-weight:600;margin-bottom:8px;color:var(--accent);text-align:center}
 
-        /* 分类按钮确保使用 LXGW WenKai TC（按钮文字也要用该字体） */
         .category-btns{display:flex;gap:14px;margin-bottom:16px;justify-content:center;width:100%}
         .category-btn{
             font-family:"LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -121,7 +110,6 @@
             padding:7px 14px;font-size:.95rem;border-radius:10px;background:transparent;outline:none;cursor:pointer;transition:background .18s,color .15s,border-color .17s;text-decoration:none;display:inline-block;margin-top:6px;border:1px solid rgba(255,255,255,0.03);
         }
 
-        /* 统一颜色风格，去掉刺眼的橙色 */
         .backup-link-btn, .backup-none-btn { color: #cfd8ff; }
         .backup-link-btn:hover,.backup-none-btn:hover{background:rgba(126,168,255,0.06);color:var(--primary);transform:translateY(-2px) scale(1.02)}
         .backup-none-btn{color:#b6b2b2;border-color:rgba(255,255,255,0.02)}
@@ -152,8 +140,18 @@
         }
         .backup-btn-large:hover{background:rgba(126,168,255,0.06);color:var(--primary)}
 
-        /* 删除或弱化底部的“异常色块”：把 footer 链接改为统一的柔和色，并去掉显眼背景/边框 */
-        footer{margin-top:6px;width:100%;text-align:center;color:#9aa0b3;font-size:1rem;padding:18px 0 13px 0;letter-spacing:1px;border-top:1px solid rgba(255,255,255,0.02)}
+        /* footer 使用与 body / html 相同的背景色，消除显眼色块 */
+        footer{
+            margin-top:6px;
+            width:100%;
+            text-align:center;
+            color:#9aa0b3;
+            font-size:1rem;
+            padding:18px 0 13px 0;
+            letter-spacing:1px;
+            border-top:1px solid rgba(255,255,255,0.02);
+            background: var(--background);
+        }
         footer a{color:#cfd8ff;text-decoration:none;margin-left:10px}
         footer a:hover{color:var(--accent)}
 
@@ -227,7 +225,7 @@
         <div class="notes">
             <li>
                 注：EE3 邀请码： <b>FMHY</b> 推荐使用 <a href="https://4get.canine.tools/web?s=Vivaldi浏览器" target="_blank">Vivaldi 浏览器</a> 科学访问
-                <br>备份网址：<a href="https://www.bxkp.org" target="_blank">www</a>、<a href="https://v.bxkp.org" target="_blank">Vercel</a>、<a href="https://bxkp.netlify.app" target="_blank">Netlify</a>
+                <br>备份网址：<a href="https://www.bxkp.org" target="_blank">www</a>、<a href="https://v.bxkp.org" target="_blank">Vercel</a>
             </li>
         </div>
 
@@ -406,7 +404,6 @@
 
 <script>
 (function(){
-    // 更写实的星空：点状星光 + 柔和光晕 + 偶发流星（轻量实现）
     const canvas = document.getElementById('starfield');
     if(!canvas) return;
     const ctx = canvas.getContext('2d',{alpha:true});
@@ -419,12 +416,11 @@
         const vw = Math.max(1, window.innerWidth);
         const vh = Math.max(1, window.innerHeight);
         const area = vw * vh;
-        // 更密集、但仍写实：每 20000px² 一个星点（最大限制）
         let count = Math.round(area / 20000);
         count = Math.max(60, Math.min(count, 600));
         for(let i=0;i<count;i++){
-            const r = Math.max(0.3, Math.random()*1.6); // 大部分很小
-            const warm = Math.random() < 0.12; // 少部分偏暖
+            const r = Math.max(0.3, Math.random()*1.6);
+            const warm = Math.random() < 0.12;
             const color = warm ? `rgba(${200+rand(0,55)},${180+rand(0,40)},${150+rand(0,40)},` : `rgba(${180+rand(0,40)},${200+rand(0,55)},${255},`;
             stars.push({
                 x: Math.random()*vw,
@@ -436,7 +432,6 @@
                 color,
             });
         }
-        // 添加若干较亮的恒星
         const brightCount = Math.round(count * 0.015);
         for(let j=0;j<brightCount;j++){
             stars.push({
@@ -468,7 +463,6 @@
         const tw = 0.6 + 0.4 * Math.sin(s.phase + t * s.twinkleSpeed);
         const alpha = Math.max(0, Math.min(1, s.baseAlpha * (0.3 + tw)));
         const r = Math.max(0.18, s.r * (0.9 + 0.3*Math.sin(s.phase*1.3 + t*s.twinkleSpeed)));
-        // 光晕（近似真实恒星的散射）
         const glow = Math.max(6, r * 6);
         const grad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, glow);
         grad.addColorStop(0, s.color + (alpha*0.95) + ')');
@@ -480,20 +474,18 @@
         ctx.arc(s.x, s.y, glow, 0, Math.PI*2);
         ctx.fill();
 
-        // 中心点
         ctx.beginPath();
         ctx.fillStyle = s.color + Math.min(1, alpha*1.2) + ')';
         ctx.arc(s.x, s.y, r, 0, Math.PI*2);
         ctx.fill();
     }
 
-    // 简单的流星效果：偶发生成，带尾迹
     function spawnShooting(){
-        if(Math.random() > 0.98) { // 约每次帧有 2% 概率生成一颗
+        if(Math.random() > 0.98) {
             const fromLeft = Math.random() < 0.5;
             const y = rand(0.05*height, 0.8*height);
             const length = rand(120, 320);
-            const speed = rand(800, 1600); // px per second
+            const speed = rand(800, 1600);
             shooting.push({
                 x: fromLeft ? -50 : width + 50,
                 y,
@@ -507,13 +499,11 @@
     }
 
     function drawShooting(s, dt){
-        // position update
         s.x += s.vx * dt;
         s.y += s.vy * dt;
         s.life += dt/1000;
         const progress = s.life / s.maxLife;
         const alpha = Math.max(0, 1 - progress);
-        // 画尾迹（线性渐隐）
         ctx.beginPath();
         ctx.moveTo(s.x, s.y);
         ctx.lineTo(s.x - s.vx*0.03, s.y - s.vy*0.03);
@@ -521,7 +511,6 @@
         ctx.lineWidth = Math.max(1, 3 * (1 - progress));
         ctx.stroke();
 
-        // 画亮点头部
         const headSize = Math.max(1.8, 3.8 * (1 - progress));
         const grad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, headSize*6);
         grad.addColorStop(0, 'rgba(255,255,255,' + (alpha) + ')');
@@ -537,7 +526,7 @@
         const t = (timeMs || 0)/1000;
         ctx.clearRect(0,0,width,height);
 
-        // 背景微弱雾层（增加深度，低 alpha）
+        // subtle background haze for depth while keeping base color unified
         ctx.fillStyle = 'rgba(2,6,18,0.12)';
         ctx.fillRect(0,0,width,height);
 
@@ -545,14 +534,11 @@
             drawStar(stars[i], t);
         }
 
-        // Shooting stars update/draw
-        // dt in ms since last frame approximated by frame rate (we'll compute)
         if(!window._lastFrameTime) window._lastFrameTime = timeMs || performance.now();
         const now = timeMs || performance.now();
         const dt = Math.max(16, now - window._lastFrameTime);
         window._lastFrameTime = now;
 
-        // spawn occasionally
         spawnShooting();
 
         for(let i = shooting.length-1; i>=0; i--){
