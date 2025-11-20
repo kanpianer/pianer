@@ -8,13 +8,15 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC&family=Zhi+Mang+Xing&display=swap">
     <style>
         :root{
-            --primary:#fff;
-            --background:#0b1220;
-            --accent:#ff5630;
-            --muted:rgba(52,54,70,0.5);
-            --button-hover:#353949;
-            --outline:#ff56309c;
-            --fixed:#ff5630;
+            --primary:#e8eefc;
+            /* 夜空基色（用于控件的深色基调） */
+            --background:#030417;
+            /* 重点色改成与夜空更协调的柔和蓝（而非强烈橙色） */
+            --accent:#7ea8ff;
+            --muted:rgba(40,44,60,0.55);
+            --button-hover:rgba(80,88,120,0.38);
+            --outline:rgba(126,168,255,0.12);
+            --fixed:rgba(126,168,255,0.12);
             --page-max-width:1200px;
             --page-padding-x:clamp(16px,4vw,40px);
             --title-width:clamp(260px,56%,760px);
@@ -26,14 +28,19 @@
         /* 全站（除标题外）默认字体为 LXGW WenKai TC */
         body{
             margin:0;
-            /* 统一为暗黑色夜空背景 */
-            background-color: var(--background);
             color:var(--primary);
             font-family:"LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             min-height:100vh;
             display:flex;
             flex-direction:column;
             overflow-x:hidden;
+
+            /* 统一暗黑夜空背景：深色线性 + 2 个柔和雷云/星云径向渐变以增加层次感 */
+            background:
+                radial-gradient(circle at 20% 12%, rgba(20,30,60,0.28), transparent 14%),
+                radial-gradient(circle at 85% 70%, rgba(6,12,28,0.28), transparent 18%),
+                linear-gradient(180deg, #020214 0%, #05102a 65%, #00101a 100%);
+            background-attachment: fixed;
         }
 
         /* 标题单独使用 Zhi Mang Xing（仅用于 header.title-box） */
@@ -48,11 +55,15 @@
             text-align:center;
             width:var(--title-width);
             margin-inline:auto;
+            color:var(--primary);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.6);
         }
 
-        /* 全局超链接文字颜色统一 */
-        a { color: #9e9eff; }
+        /* 全局超链接文字颜色统一（更偏柔和蓝，和夜空一致） */
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
 
+        /* 星云画布（在 body 背景前） */
         #starfield{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
 
         .container{
@@ -71,7 +82,6 @@
 
         .banner{width:100%;display:flex;flex-direction:column;align-items:center;margin-bottom:14px}
         .banner h2{font-size:1.3rem;font-weight:600;margin-bottom:8px;color:var(--accent);text-align:center}
-        .banner a{color:#9e9eff}
 
         /* 分类按钮确保使用 LXGW WenKai TC（按钮文字也要用该字体） */
         .category-btns{display:flex;gap:14px;margin-bottom:16px;justify-content:center;width:100%}
@@ -81,8 +91,8 @@
             background:var(--muted);color:var(--primary);border:none;cursor:pointer;font-weight:600;
             transition:background .18s,color .18s,transform .14s;outline:2px solid transparent;
         }
-        .category-btn:hover{background:var(--button-hover);color:var(--accent);transform:translateY(-2px) scale(1.03)}
-        .category-btn.active{background:rgba(255,86,48,0.5);color:var(--background);outline:2px solid var(--fixed)}
+        .category-btn:hover{background:var(--button-hover);color:var(--primary);transform:translateY(-2px) scale(1.03)}
+        .category-btn.active{background:rgba(126,168,255,0.12);color:var(--primary);outline:2px solid rgba(126,168,255,0.08)}
 
         .grid-wrapper{width:100%;position:relative;margin:8px 0;min-height:150px}
         .site-grid{
@@ -92,39 +102,40 @@
         .site-grid.faded{opacity:0;pointer-events:none}
 
         .site-card{
-            background:var(--muted);border-radius:17px;box-shadow:0 2px 8px rgba(20,24,32,0.09);
-            padding:17.8px 22.6px;width:80.75%;min-height:76px;display:flex;flex-direction:column;align-items:center;position:relative;cursor:pointer;transition:transform .3s ease,box-shadow .2s ease;
+            background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.05));
+            border-radius:12px;
+            padding:14px 18px;width:80.75%;min-height:76px;display:flex;flex-direction:column;align-items:center;position:relative;cursor:pointer;transition:transform .22s ease,box-shadow .18s ease;
+            box-shadow: 0 6px 20px rgba(2,6,18,0.45), inset 0 1px 0 rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.02);
         }
-        .site-card:hover{transform:scale(1.2);box-shadow:0 8px 15px rgba(0,0,0,0.2)}
+        .site-card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 18px 40px rgba(2,6,18,0.6)}
 
         .site-name{
             font-family:"LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            font-weight:600;margin-bottom:13px;text-align:center;background:none;border:none;color:inherit;cursor:pointer;transition:color .17s;font-size:1.296rem;text-decoration:none;display:inline-block;padding:0
+            font-weight:700;margin-bottom:10px;text-align:center;background:none;border:none;color:inherit;cursor:pointer;transition:color .17s;font-size:1.15rem;text-decoration:none;display:inline-block;padding:0;
         }
-        .site-name:hover{color:var(--accent);text-decoration:underline}
+        .site-name:hover{color:var(--accent)}
 
         .backup-link-btn,.backup-none-btn{
             font-family:"LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            padding:7px 16px;font-size:.97rem;border:2px solid var(--outline);border-radius:13px;background:transparent;outline:none;cursor:pointer;transition:background .2s,color .15s,border-color .17s;text-decoration:none;display:inline-block;margin-top:6px;
+            padding:7px 14px;font-size:.95rem;border-radius:10px;background:transparent;outline:none;cursor:pointer;transition:background .18s,color .15s,border-color .17s;text-decoration:none;display:inline-block;margin-top:6px;border:1px solid rgba(255,255,255,0.03);
         }
 
-        /* 备份按钮默认遵循全局 a 颜色，但卡片内的“备份网址”文字特意强调为 --accent (#ff5630) */
-        .backup-link-btn, .backup-none-btn { color: #9e9eff; }
-        .site-card .backup-link-btn { color: var(--accent); }
-
-        .backup-link-btn:hover,.backup-none-btn:hover{background:var(--accent);color:var(--background);border-color:var(--fixed);transform:translateY(-2px) scale(1.04)}
-        .backup-none-btn{color:#b6b2b2;border-color:var(--outline)}
+        /* 统一颜色风格，去掉刺眼的橙色 */
+        .backup-link-btn, .backup-none-btn { color: #cfd8ff; }
+        .backup-link-btn:hover,.backup-none-btn:hover{background:rgba(126,168,255,0.06);color:var(--primary);transform:translateY(-2px) scale(1.02)}
+        .backup-none-btn{color:#b6b2b2;border-color:rgba(255,255,255,0.02)}
 
         .emby-box{position:absolute;inset:0;display:none;z-index:2;align-items:center;justify-content:center;padding:18px;box-sizing:border-box}
         .emby-box .card{
             width:100%;max-width:980px;background:transparent;border-radius:0;border:none;padding:clamp(14px,2.2vw,28px);
-            color:#f6f4f6;box-shadow:none;display:flex;flex-direction:column;gap:10px;text-align:left;
+            color:#e6e9f5;box-shadow:none;display:flex;flex-direction:column;gap:10px;text-align:left;
             font-family:"LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            font-size:clamp(1.15rem,2vw,1.28rem);line-height:1.55
+            font-size:clamp(1.05rem,2vw,1.18rem);line-height:1.6
         }
         .emby-box h3{margin:0;font-size:clamp(1.05rem,2.4vw,1.28rem);color:var(--accent);letter-spacing:.6px}
-        .emby-box p{margin:0;color:#d7d4d8}
-        .emby-box ul{margin:0 0 0 1.2em;color:#d0cdd1}
+        .emby-box p{margin:0;color:#d7d9e8}
+        .emby-box ul{margin:0 0 0 1.2em;color:#cfd6ee}
         .emby-box small{color:#bcb8c0}
         .emby-box.show{display:flex}
 
@@ -136,16 +147,18 @@
             width:100%;text-align:center;margin:6px 0;display:flex;justify-content:center;align-items:center;gap:12px;
         }
         .backup-btn-large{
-            padding:6.44px 14.8px;font-size:.89rem;color:var(--accent);border:2px solid var(--accent);background:transparent;border-radius:28px;outline:none;cursor:pointer;transition:background .18s,color .18s;
+            padding:6.44px 14.8px;font-size:.89rem;color:var(--primary);border:1px solid rgba(255,255,255,0.04);background:transparent;border-radius:28px;outline:none;cursor:pointer;transition:background .18s,color .18s;
             font-family:"LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
-        .backup-btn-large:hover{background:var(--accent);color:var(--background)}
+        .backup-btn-large:hover{background:rgba(126,168,255,0.06);color:var(--primary)}
 
-        footer{margin-top:6px;width:100%;text-align:center;color:#929099;font-size:1rem;padding:18px 0 13px 0;letter-spacing:1px}
-        footer a{color:var(--accent);text-decoration:none;margin-left:10px}
+        /* 删除或弱化底部的“异常色块”：把 footer 链接改为统一的柔和色，并去掉显眼背景/边框 */
+        footer{margin-top:6px;width:100%;text-align:center;color:#9aa0b3;font-size:1rem;padding:18px 0 13px 0;letter-spacing:1px;border-top:1px solid rgba(255,255,255,0.02)}
+        footer a{color:#cfd8ff;text-decoration:none;margin-left:10px}
+        footer a:hover{color:var(--accent)}
 
-        ::-webkit-scrollbar{width:8px;background:var(--muted)}
-        ::-webkit-scrollbar-thumb{background:rgba(52,54,70,0.5);border-radius:6px}
+        ::-webkit-scrollbar{width:8px;background:transparent}
+        ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.03);border-radius:6px}
 
         @media screen and (max-width:900px){
             .site-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
@@ -188,19 +201,13 @@
                     <p>如果你厌倦了视频网站多元的广告和模糊不清的画质，Emby服会是不错的选择。<br>Emby服可大致分为以下两类：</p>
                     <ul>
                         <li>公益服：无需付费，但可能有一定入服门槛</li>
-                        <a href="https://intro.bgp.yt/" target="_blank" rel="noopener noreferrer">二次元Emby</a>、
-                        <a href="https://t.me/embyxk" target="_blank" rel="noopener noreferrer">公益服星空指南</a>、
-                        <a href="https://t.me/FreeEmbyGuide" target="_blank" rel="noopener noreferrer">公益不完全指北</a>
                         <li>付费服：需要付费，但服务会相对比较稳定</li>
-                        <a href="https://plan.emby.moe/" target="_blank" rel="noopener noreferrer">1111Emby</a>、
-                        <a href="https://micu.hk/archives/emby-users" target="_blank" rel="noopener noreferrer">MICU</a>、
-                        <a href="https://t.me/Emby_Navigation" target="_blank" rel="noopener noreferrer">付费Emby导航</a>
                     </ul>
                     <p>注意事项：</p>
                     <ul>
                         <li>文中提到的Emby服仅作为示例，不是广告，跑路算你倒霉</li>
                         <li>购买前确保你可以访问相关Emby服线路，或咨询服主线路是否可以直连</li>
-                        <li>详细教程请访问：<a href="https://emby.wiki/zh/home" target="_blank" rel="noopener noreferrer">https://emby.wiki</a></li>
+                        <li>详细教程请访问：<a href="https://emby.wiki/zh/home" target="_blank" rel="noopener noreferrer">emby.wiki</a></li>
                     </ul>
                 </div>
             </div>
@@ -209,8 +216,8 @@
                 <h3>OK影视</h3>
                 <p>OK影视/TVBox使用起来和Emby差不多，一般填写好配置接口的地址就可以了。<br>详细教程和相关资源可访问以下链接：</p>
                 <ul>
-                    <li><a href="https://blog.ccino.org/p/tvbox-tv-version-installation-and-configuration-complete-guide/" target="_blank" rel="noopener noreferrer">TVBox电视版安装配置全指南</a></li>
-                    <li><a href="https://t.me/tvb_ys" target="_blank" rel="noopener noreferrer">TVB/影視(OK) 电报频道</a></li>
+                    <li><a href="https://blog.ccino.org/p/tvbox-tv-version-installation-and-configuration-complete-guide/" target="_blank">TVBox安装配置</a></li>
+                    <li><a href="https://github.com/qist/tvbox" target="_blank">OK影视 Github</a></li>
                     <li><a href="https://github.com/qist/tvbox" target="_blank" rel="noopener noreferrer">OK影视 各种客户端和配置接口</a></li>
                     <li><a href="https://www.饭太硬.com" target="_blank" rel="noopener noreferrer">饭太硬 配置接口导航</a></li>
                 </ul>
@@ -219,7 +226,7 @@
 
         <div class="notes">
             <li>
-                注：EE3 邀请码： <a style="color: #ff5630;">FMHY</a> 推荐使用 <a href="https://4get.canine.tools/web?s=Vivaldi浏览器" target="_blank">Vivaldi浏览器</a> 科学访问
+                注：EE3 邀请码： <b>FMHY</b> 推荐使用 <a href="https://4get.canine.tools/web?s=Vivaldi浏览器" target="_blank">Vivaldi 浏览器</a> 科学访问
                 <br>备份网址：<a href="https://www.bxkp.org" target="_blank">www</a>、<a href="https://v.bxkp.org" target="_blank">Vercel</a>、<a href="https://bxkp.netlify.app" target="_blank">Netlify</a>
             </li>
         </div>
@@ -237,6 +244,7 @@
     </div>
 
 <script>
+    // —— 保留并略微简化原有站点数据与交互逻辑 —— （未改动核心数据结构）
     const SITES = [
         {name:"厂长资源",main_url:"https://www.cz4k.com/",backup_url:"https://www.czzy.site/",tags:["在线","BT"]},
         {name:"NO视频",main_url:"https://www.novipnoad.cc/",backup_url:"https://findno.tv/",tags:["在线"]},
@@ -253,7 +261,7 @@
         {name:"爱盼",main_url:"https://www.aipan.me",backup_url:"",tags:["网盘"]},
         {name:"阿里云资源",main_url:"https://slowread.net/",backup_url:"",tags:["网盘"]},
         {name:"ShowBox",main_url:"https://www.showbox.media/",backup_url:"",tags:["网盘"]},
-        {name:"AGE动漫",main_url:"https://www.agedm.io/",backup_url:"http://www.age.tv/",tags:["在线"]},
+        {name:"AGE动漫",main_url:"https://www.agedm.io/",backup_url:"https://www.age.tv/",tags:["在线"]},
         {name:"EE3",main_url:"https://ee3.me/",backup_url:"https://rips.cc/",tags:["在线"]},
         {name:"Cineby",main_url:"https://www.cineby.gd/",backup_url:"https://www.fmovies.gd/",tags:["在线"]},
         {name:"Cinemaos",main_url:"https://cinemaos.live",backup_url:"https://discord.com/invite/38yFnFCJnA",tags:["在线"]},
@@ -272,8 +280,7 @@
         {name:"iDope",main_url:"https://idope.hair",backup_url:"",tags:["BT"]},
         {name:"ACG.RIP",main_url:"https://acg.rip",backup_url:"",tags:["BT"]},
         {name:"LimeTorrents",main_url:"https://www.limetorrents.asia",backup_url:"https://limetorrent.si/",tags:["BT"]},
-        {name:"ExtraTorrent",main_url:"https://extratorrent.st",backup_url:"",tags:["BT"]},
-    ];
+        {name:"ExtraTorrent",main_url:"https://extratorrent.st",backup_url:"",tags:["BT"]},    ];
 
     let currentCategory = 'online';
     let infoActive = false;
@@ -315,7 +322,7 @@
             const backup = document.createElement('a');
             backup.className = hasBackup ? 'backup-link-btn' : 'backup-none-btn';
             backup.textContent = hasBackup ? '备份网址' : '没有备份';
-            backup.href = hasBackup ? site.backup_url : 'https://app.affine.pro/workspace/43839213-da83-415f-98f9-204fcd910d54/8UjZEIrLtL-PHOqZwH7b4';
+            backup.href = hasBackup ? site.backup_url : '#';
             backup.target = '_blank';
             backup.rel = 'noopener noreferrer';
             backup.addEventListener('click', e => e.stopPropagation());
@@ -399,10 +406,11 @@
 
 <script>
 (function(){
+    // 更写实的星空：点状星光 + 柔和光晕 + 偶发流星（轻量实现）
     const canvas = document.getElementById('starfield');
     if(!canvas) return;
     const ctx = canvas.getContext('2d',{alpha:true});
-    let stars = [], width=0, height=0, dpr=1, rafId=null;
+    let stars = [], shooting = [], width=0, height=0, dpr=1, rafId=null;
 
     function rand(min,max){return min + Math.random()*(max-min)}
 
@@ -411,34 +419,34 @@
         const vw = Math.max(1, window.innerWidth);
         const vh = Math.max(1, window.innerHeight);
         const area = vw * vh;
-        let count = Math.round(area / 24000);
-        count = Math.max(20, Math.min(count, 200));
+        // 更密集、但仍写实：每 20000px² 一个星点（最大限制）
+        let count = Math.round(area / 20000);
+        count = Math.max(60, Math.min(count, 600));
         for(let i=0;i<count;i++){
-            const sizeBias = Math.pow(Math.random(),2);
-            const r = 0.5 + sizeBias * 2.6;
+            const r = Math.max(0.3, Math.random()*1.6); // 大部分很小
+            const warm = Math.random() < 0.12; // 少部分偏暖
+            const color = warm ? `rgba(${200+rand(0,55)},${180+rand(0,40)},${150+rand(0,40)},` : `rgba(${180+rand(0,40)},${200+rand(0,55)},${255},`;
             stars.push({
                 x: Math.random()*vw,
                 y: Math.random()*vh,
                 r,
-                baseAlpha: 0.35 + Math.random()*0.85,
-                twinkleSpeed: 0.6 + Math.random()*2.2,
+                baseAlpha: 0.35 + Math.random()*0.7,
+                twinkleSpeed: 0.3 + Math.random()*1.5,
                 phase: Math.random()*Math.PI*2,
-                rotation: Math.random()*Math.PI*2,
-                colorShift: (Math.random()*40)-10
+                color,
             });
         }
-        const bigCount = Math.round(count*0.01);
-        for(let j=0;j<bigCount;j++){
-            const r = 2.8 + Math.random()*4.2;
+        // 添加若干较亮的恒星
+        const brightCount = Math.round(count * 0.015);
+        for(let j=0;j<brightCount;j++){
             stars.push({
                 x: Math.random()*vw,
                 y: Math.random()*vh,
-                r,
-                baseAlpha: 0.7 + Math.random()*0.5,
-                twinkleSpeed: 0.3 + Math.random()*1.2,
+                r: 1.6 + Math.random()*2.8,
+                baseAlpha: 0.8 + Math.random()*0.3,
+                twinkleSpeed: 0.2 + Math.random()*0.6,
                 phase: Math.random()*Math.PI*2,
-                rotation: Math.random()*Math.PI*2,
-                colorShift: (Math.random()*40)-10
+                color: `rgba(${220+rand(0,30)},${220+rand(0,20)},${255},`,
             });
         }
     }
@@ -456,61 +464,100 @@
         draw(0);
     }
 
-    function drawFourPointStar(x,y,r,alpha,rotation){
-        ctx.save();
-        ctx.translate(x,y);
-        ctx.rotate(rotation);
-        if(r>1.6){
-            const glowR = Math.max(10, r*5.0);
-            const grad = ctx.createRadialGradient(0,0,0,0,0,glowR);
-            grad.addColorStop(0, `rgba(255,255,255,${Math.min(1, alpha*1.0)})`);
-            grad.addColorStop(0.12, `rgba(255,240,220,${alpha*0.26})`);
-            grad.addColorStop(0.4, `rgba(200,220,255,${alpha*0.06})`);
-            grad.addColorStop(1,'rgba(0,0,0,0)');
-            ctx.fillStyle = grad;
-            ctx.beginPath(); ctx.arc(0,0,glowR,0,Math.PI*2); ctx.fill();
-        }
-        const spikes = 4;
-        const longR = r*3.8, shortR = r*1.6;
+    function drawStar(s, t){
+        const tw = 0.6 + 0.4 * Math.sin(s.phase + t * s.twinkleSpeed);
+        const alpha = Math.max(0, Math.min(1, s.baseAlpha * (0.3 + tw)));
+        const r = Math.max(0.18, s.r * (0.9 + 0.3*Math.sin(s.phase*1.3 + t*s.twinkleSpeed)));
+        // 光晕（近似真实恒星的散射）
+        const glow = Math.max(6, r * 6);
+        const grad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, glow);
+        grad.addColorStop(0, s.color + (alpha*0.95) + ')');
+        grad.addColorStop(0.12, s.color + (alpha*0.35) + ')');
+        grad.addColorStop(0.5, 'rgba(150,170,255,' + (alpha*0.06) + ')');
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grad;
         ctx.beginPath();
-        for(let i=0;i<spikes*2;i++){
-            const angle = (Math.PI/spikes)*i;
-            const radius = (i%2===0)?longR:shortR;
-            const px = Math.cos(angle - Math.PI/2)*radius;
-            const py = Math.sin(angle - Math.PI/2)*radius;
-            i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
-        }
-        ctx.closePath();
-        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+        ctx.arc(s.x, s.y, glow, 0, Math.PI*2);
         ctx.fill();
 
+        // 中心点
         ctx.beginPath();
-        const cLong = r*1.1, cShort = r*0.5;
-        for(let i=0;i<spikes*2;i++){
-            const angle = (Math.PI/spikes)*i;
-            const radius = (i%2===0)?cLong:cShort;
-            const px = Math.cos(angle - Math.PI/2)*radius;
-            const py = Math.sin(angle - Math.PI/2)*radius;
-            i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
-        }
-        ctx.closePath();
-        ctx.fillStyle = `rgba(255,255,255,${Math.min(1, alpha*1.25)})`;
+        ctx.fillStyle = s.color + Math.min(1, alpha*1.2) + ')';
+        ctx.arc(s.x, s.y, r, 0, Math.PI*2);
         ctx.fill();
-        ctx.restore();
+    }
+
+    // 简单的流星效果：偶发生成，带尾迹
+    function spawnShooting(){
+        if(Math.random() > 0.98) { // 约每次帧有 2% 概率生成一颗
+            const fromLeft = Math.random() < 0.5;
+            const y = rand(0.05*height, 0.8*height);
+            const length = rand(120, 320);
+            const speed = rand(800, 1600); // px per second
+            shooting.push({
+                x: fromLeft ? -50 : width + 50,
+                y,
+                vx: (fromLeft ? 1 : -1) * (speed / 60),
+                vy: rand(-0.2, -0.6) * (speed/120),
+                life: 0,
+                maxLife: rand(0.45, 0.95),
+                length
+            });
+        }
+    }
+
+    function drawShooting(s, dt){
+        // position update
+        s.x += s.vx * dt;
+        s.y += s.vy * dt;
+        s.life += dt/1000;
+        const progress = s.life / s.maxLife;
+        const alpha = Math.max(0, 1 - progress);
+        // 画尾迹（线性渐隐）
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(s.x - s.vx*0.03, s.y - s.vy*0.03);
+        ctx.strokeStyle = 'rgba(220,230,255,' + (0.9*alpha) + ')';
+        ctx.lineWidth = Math.max(1, 3 * (1 - progress));
+        ctx.stroke();
+
+        // 画亮点头部
+        const headSize = Math.max(1.8, 3.8 * (1 - progress));
+        const grad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, headSize*6);
+        grad.addColorStop(0, 'rgba(255,255,255,' + (alpha) + ')');
+        grad.addColorStop(0.2, 'rgba(200,220,255,' + (alpha*0.6) + ')');
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, headSize*5, 0, Math.PI*2);
+        ctx.fill();
     }
 
     function draw(timeMs){
         const t = (timeMs || 0)/1000;
         ctx.clearRect(0,0,width,height);
+
+        // 背景微弱雾层（增加深度，低 alpha）
+        ctx.fillStyle = 'rgba(2,6,18,0.12)';
+        ctx.fillRect(0,0,width,height);
+
         for(let i=0;i<stars.length;i++){
-            const s = stars[i];
-            const tw = 0.5 + 0.5 * Math.sin(s.phase + t * s.twinkleSpeed * 1.5);
-            const amplitudeMultiplier = 1.05 * 1.4;
-            const alpha = Math.max(0, Math.min(1, s.baseAlpha * (0.25 + amplitudeMultiplier * tw)));
-            const rScale = 1 + (0.45 * 1.4) * Math.sin(s.phase * 1.3 + t * s.twinkleSpeed * 1.6);
-            const drawR = Math.max(0.35, s.r * rScale);
-            const rotation = s.rotation + Math.sin(t * s.twinkleSpeed * 0.3 + s.phase) * 0.15;
-            drawFourPointStar(s.x, s.y, drawR, alpha, rotation);
+            drawStar(stars[i], t);
+        }
+
+        // Shooting stars update/draw
+        // dt in ms since last frame approximated by frame rate (we'll compute)
+        if(!window._lastFrameTime) window._lastFrameTime = timeMs || performance.now();
+        const now = timeMs || performance.now();
+        const dt = Math.max(16, now - window._lastFrameTime);
+        window._lastFrameTime = now;
+
+        // spawn occasionally
+        spawnShooting();
+
+        for(let i = shooting.length-1; i>=0; i--){
+            drawShooting(shooting[i], dt);
+            if(shooting[i].life > shooting[i].maxLife) shooting.splice(i,1);
         }
     }
 
